@@ -185,23 +185,23 @@ h2 { font-family: var(--serif); font-size: 23px; }
 .bouquet-open-card .mini-envelope svg { position: absolute; left: 50%; top: 48%; transform: translate(-50%,-50%); width: 15px; height: 15px; z-index: 1; background: #FFFFFF; border-radius: 50%; padding: 2px; box-sizing: content-box; }
 .bouquet-open-card .envelope-tag-label { position: absolute; bottom: 0; left: 0; right: 0; font: 8px/1.2 Inter,sans-serif; letter-spacing: .1px; color: #38567B; }
 .bouquet-open-card:focus-visible .mini-envelope { outline: 2px solid #4A6B94; outline-offset: 3px; }
-.modal.envelope-card-dialog { padding: 20px 10px; overflow-x: hidden; background: transparent; box-shadow: none; border: 0; }
-.envelope-card-dialog .close { position: absolute; top: 105px; right: 23px; width: 34px; height: 34px; border-radius: 50%; background: #FFFFFF; color: #38567B; box-shadow: 0 3px 12px #2C384E1A; z-index: 10; }
-.envelope-reveal { position: relative; isolation: isolate; padding: 90px 12px 20px; perspective: 1000px; overflow: hidden; }
-.envelope-letter { position: relative; z-index: 3; padding: 25px 24px; border-radius: 9px; background: #FFFFFF; box-shadow: 0 12px 36px #2C384E1F; opacity: 1; transform: none; animation: letter-emerge 780ms cubic-bezier(.2,.7,.2,1) 340ms both; }
-.envelope-letter h2 { font-family: Caveat,cursive; font-size: 29px; color: #4A6B94; margin: 0 0 20px; }
-.envelope-letter .finished-note { background: #F3F7FA; font-size: 28px; border: 0; padding: 25px 20px; }
-.envelope-letter .card-artwork { border-radius: 2px; }
-.envelope-shell { position: absolute; left: -2%; right: -2%; top: 50%; height: 190px; transform: translateY(-20%); z-index: 4; opacity: 0; pointer-events: none; animation: envelope-away 1150ms ease both; }
-.envelope-lining { position: absolute; inset: 0; background: #D6E3F0; border-radius: 5px; box-shadow: 0 12px 30px #2C384E26; }
-.envelope-front { position: absolute; inset: 0; z-index: 2; background: #F3F7FA; clip-path: polygon(0 0,50% 54%,100% 0,100% 100%,0 100%); border-radius: 4px; }
-.envelope-front::after { content: ''; position: absolute; inset: 0; background: #FFFFFF; clip-path: polygon(0 100%,50% 37%,100% 100%); }
-.envelope-flap { position: absolute; left: 0; right: 0; top: 0; height: 110px; background: #E2EDF8; clip-path: polygon(0 0,100% 0,50% 100%); transform-origin: 50% 0; backface-visibility: visible; z-index: 5; transform: rotateX(180deg); animation: envelope-unfold 460ms cubic-bezier(.2,.7,.2,1) both; }
-@keyframes envelope-unfold { from { transform: rotateX(0); } to { transform: rotateX(180deg); } }
-@keyframes letter-emerge { 0% { transform: translateY(110px) scale(.92); opacity: 0; } 20% { opacity: 1; } 100% { transform: translateY(0) scale(1); opacity: 1; } }
-@keyframes envelope-away { 0%,62% { opacity: 1; transform: translateY(-20%); } 100% { opacity: 0; transform: translateY(50px); } }
-@media (max-width:600px) { .modal.envelope-card-dialog { padding: 20px 5px; } .envelope-letter { padding: 22px 18px; } .envelope-letter h2 { font-size: 27px; } .envelope-shell { height: 150px; } .envelope-flap { height: 90px; } }
-@media (prefers-reduced-motion:reduce) { .envelope-letter,.envelope-shell,.envelope-flap { animation: none; } }
+/* The reading surface travels from the attached envelope before growing. */
+.mini-envelope-fold { transform-origin: 50% 0; transition: transform 300ms ease; }
+.envelope-is-open .mini-envelope { overflow: visible; }
+.envelope-is-open .mini-envelope-fold { transform: perspective(200px) rotateX(180deg); }
+.modal.envelope-card-dialog { position: fixed; inset: 0; width: 100vw; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: transparent; box-shadow: none; overflow: hidden; }
+.modal.envelope-card-dialog::backdrop { background: transparent; backdrop-filter: none; }
+.envelope-letter { position: absolute; left: 50%; top: 50%; width: min(420px,88vw); max-height: 84dvh; overflow: auto; box-sizing: border-box; padding: 28px 24px; background: #FFFFFF; border: 1px solid #D6E3F0; border-radius: 5px; box-shadow: 0 12px 36px #2C384E26; transform: translate(-50%,-50%); animation: letter-slide-grow 1400ms cubic-bezier(.22,.65,.25,1) both; }
+.envelope-letter .close { position: absolute; top: 6px; right: 8px; width: 30px; height: 30px; color: #38567B; background: #FFFFFF; z-index: 1; }
+.envelope-letter h2 { font-family: Caveat,cursive; font-size: 29px; color: #4A6B94; margin: 0 25px 20px 0; }
+.envelope-letter .finished-note { margin: 0; background: #F3F7FA; font-size: 28px; border: 0; padding: 25px 20px; }
+.envelope-letter .card-artwork { width: 100%; border-radius: 2px; }
+@keyframes letter-slide-grow {
+  0%,18% { transform: translate(-50%,-50%) translate(var(--from-x),var(--from-y)) scale(var(--small-scale)); clip-path: inset(0 0 100% 0); box-shadow: none; }
+  48% { transform: translate(-50%,-50%) translate(var(--from-x),calc(var(--from-y) - 85px)) scale(var(--small-scale)); clip-path: inset(0); box-shadow: 0 3px 9px #2C384E14; }
+  100% { transform: translate(-50%,-50%); clip-path: inset(0); }
+}
+@media (prefers-reduced-motion:reduce) { .envelope-letter { animation: none; } .mini-envelope-fold { transition: none; } }
 .stem-meter { font-size: 12px; margin: 20px 0 14px; gap: 14px; }
 .stem-meter>div { background: #D6E3F0; height: 5px; }
 .stem-meter i { background: #7AA1CF; }
