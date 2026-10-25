@@ -78,7 +78,9 @@ const BouquetScene=forwardRef(function BouquetScene({draft,onPatch,onSelect},ref
     renderer.domElement.addEventListener('pointerdown',onPointerDown);
     renderer.domElement.addEventListener('pointerup',onPointerUp);
     const reduced=matchMedia('(prefers-reduced-motion: reduce)');let raf;
-    function frame(time){raf=requestAnimationFrame(frame);controls.update();root.children.forEach(c=>{if(c.userData.flower&&!reduced.matches)c.rotation.z=c.userData.tilt+.008*Math.sin(time*.0008+c.userData.phase);});renderer.render(scene,camera);
+    function frame(time){raf=requestAnimationFrame(frame);
+      if(tagRef.current?.getAttribute('aria-expanded')==='true')return;
+      controls.update();root.children.forEach(c=>{if(c.userData.flower&&!reduced.matches)c.rotation.z=c.userData.tilt+.008*Math.sin(time*.0008+c.userData.phase);});renderer.render(scene,camera);
       const tag=tagRef.current;
       if(tag&&!tag.classList.contains('card-fallback')){
         const anchor=state.tagAnchor,holder=state.tagGroup;
