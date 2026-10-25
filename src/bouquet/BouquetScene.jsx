@@ -7,6 +7,8 @@ import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
 import {wraps,byKey,backdrops} from './catalog.js';
 import {arrange,stemCount} from './draft.js';
 import {cameraFrame} from './scene-layout.js';
+import BouquetCard from './BouquetCard.jsx';
+import {projectCardTag} from './card-tag.js';
 
 const loader=new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
 const cache=new Map();
@@ -29,7 +31,7 @@ function polka(material){
   };material.customProgramCacheKey=()=> 'posy-polka';material.needsUpdate=true;
 }
 const BouquetScene=forwardRef(function BouquetScene({draft,onPatch,onSelect},ref){
-  const host=useRef(null),engine=useRef(null),ready=useRef(false),selectRef=useRef(onSelect),[status,setStatus]=useState('Loading your wrap…'),[retry,setRetry]=useState(0),[failed,setFailed]=useState(false),[spinning,setSpinning]=useState(false);
+  const host=useRef(null),tagRef=useRef(null),engine=useRef(null),ready=useRef(false),selectRef=useRef(onSelect),[status,setStatus]=useState('Loading your wrap…'),[retry,setRetry]=useState(0),[failed,setFailed]=useState(false),[spinning,setSpinning]=useState(false);
   useEffect(()=>{selectRef.current=onSelect;},[onSelect]);
   useImperativeHandle(ref,()=>({
     snapshot(width=2160){
@@ -76,7 +78,14 @@ const BouquetScene=forwardRef(function BouquetScene({draft,onPatch,onSelect},ref
     renderer.domElement.addEventListener('pointerdown',onPointerDown);
     renderer.domElement.addEventListener('pointerup',onPointerUp);
     const reduced=matchMedia('(prefers-reduced-motion: reduce)');let raf;
-    function frame(time){raf=requestAnimationFrame(frame);controls.update();root.children.forEach(c=>{if(c.userData.flower&&!reduced.matches)c.rotation.z=c.userData.tilt+.008*Math.sin(time*.0008+c.userData.phase);});renderer.render(scene,camera);}
+    function frame(time){raf=requestAnimationFrame(frame);controls.update();root.children.forEach(c=>{if(c.userData.flower&&!reduced.matches)c.rotation.z=c.userData.tilt+.008*Math.sin(time*.0008+c.userData.phase);});renderer.render(scene,camera);
+      const tag=tagRef.current;
+      if(tag&&!tag.classList.contains('card-fallback')){
+        const anchor=state.tagAnchor,holder=state.tagGroup;
+        if(!ready.current||!anchor||!holder)tag.style.visibility='hidden';
+        else{const position=projectCardTag(anchor,holder.matrixWorld,camera,el.clientWidth,el.clientHeight);tag.style.visibility=position.visible?'visible':'hidden';tag.style.transform=`matrix(${position.a},${position.b},${position.c},${position.d},${position.x},${position.y}) translate(-50%,-50%)`;}
+      }
+    }
     raf=requestAnimationFrame(frame);
     return()=>{cancelAnimationFrame(raf);observer.disconnect();controls.dispose();renderer.domElement.removeEventListener('pointerdown',onPointerDown);renderer.domElement.removeEventListener('pointerup',onPointerUp);disposeGroup(root);renderer.dispose();renderer.forceContextLoss();renderer.domElement.remove();engine.current=null;ready.current=false;};
   },[]);
@@ -89,7 +98,13 @@ const BouquetScene=forwardRef(function BouquetScene({draft,onPatch,onSelect},ref
       await Promise.all(paths.map(model));if(cancelled)return;
       const wrap=cloneModel(await model(config.path));let box=new THREE.Box3().setFromObject(wrap);wrap.scale.setScalar(7/(box.max.y-box.min.y)*config.modelScale);box=new THREE.Box3().setFromObject(wrap);const center=box.getCenter(new THREE.Vector3());wrap.position.set(-center.x,3-box.max.y,-center.z);
       wrap.traverse(mesh=>{if(!mesh.isMesh)return;for(const material of (Array.isArray(mesh.material)?mesh.material:[mesh.material])){const name=(material.name+' '+mesh.name).toLowerCase();const index=config.colorGroups.findIndex(c=>c.parts.some(part=>name.includes(part)));if(index<0)continue;const cg=config.colorGroups[index];const options=cg.options.filter(o=>!o.hidden);const option=options[index===0?draft.paper:draft.accent]||options[0];material.color.setHex(option.color);material.roughness=cg.roughness;material.metalness=0;if(option.pattern)polka(material);}});
-      group.add(wrap);const clip=new THREE.Plane(new THREE.Vector3(0,1,0),1);
+      group.add(wrap);
+      wrap.updateWorldMatrix(true,true);
+      const tagAnchor=new THREE.Vector3(config.tag?.x??0,(config.tag?.y??-.5)-.6,.5);
+      const wrapBounds=new THREE.Box3().setFromObject(wrap);
+      const surfaceHit=new THREE.Raycaster(new THREE.Vector3(tagAnchor.x,tagAnchor.y,wrapBounds.max.z+1),new THREE.Vector3(0,0,-1)).intersectObject(wrap,true)[0];
+      if(surfaceHit)tagAnchor.z=surfaceHit.point.z+.12;
+      const clip=new THREE.Plane(new THREE.Vector3(0,1,0),1);
       const spread=draft.autoSpread?Math.min(2.4,Math.max(.4,.4+(config.topR-.4)*(.8+.9*Math.min(1,Math.max(0,(stems.length-3)/17))))):draft.spread;
       const stemGroups=new Map();
       for(const stem of stems){
@@ -98,7 +113,7 @@ const BouquetScene=forwardRef(function BouquetScene({draft,onPatch,onSelect},ref
         const flower=new THREE.Group();flower.add(source);flower.userData={flower:true,stemId:stem.id};placeStem(flower,stem,spread,config);stemGroups.set(stem.id,flower);group.add(flower);
       }
       const scale=draft.size===10?.9:draft.size===16?.95:1;group.scale.setScalar(scale);
-      if(cancelled){disposeGroup(group);return;}disposeGroup(e.root);e.root.add(group);e.spread=spread;e.config=config;e.stemGroups=stemGroups;e.fit(config.camElev??35);ready.current=true;setStatus('');
+      if(cancelled){disposeGroup(group);return;}disposeGroup(e.root);e.root.add(group);e.spread=spread;e.config=config;e.stemGroups=stemGroups;e.tagAnchor=tagAnchor;e.tagGroup=group;e.fit(config.camElev??35);ready.current=true;setStatus('');
     })().catch(()=>{if(!cancelled){ready.current=false;disposeGroup(group);setFailed(true);setStatus('A bouquet model could not load. Your choices are saved.');}});
     return()=>{cancelled=true;};
   },[sceneKey]);
@@ -107,7 +122,7 @@ const BouquetScene=forwardRef(function BouquetScene({draft,onPatch,onSelect},ref
     for(const stem of arrange(draft)){const flower=e.stemGroups.get(stem.id);if(flower)placeStem(flower,stem,e.spread,e.config);}
   },[draft.stems]);
   useEffect(()=>{if(engine.current)engine.current.controls.autoRotate=spinning;},[spinning]);
-  return <><div className="scene" ref={host}/>{status&&<div className={'scene-status '+(failed?'error':'')} role="status">{!failed&&<span className="spinner"/>}{status}{failed&&<button onClick={()=>setRetry(r=>r+1)}>Retry models</button>}</div>}
+  return <><div className="scene" ref={host}/><BouquetCard message={draft.message} tagRef={tagRef} fallback={failed}/>{status&&<div className={'scene-status '+(failed?'error':'')} role="status">{!failed&&<span className="spinner"/>}{status}{failed&&<button onClick={()=>setRetry(r=>r+1)}>Retry models</button>}</div>}
 
     <div className="floating-words" style={{color:draft.message.color,fontFamily:({'Classic':'Cormorant Garamond','Elegant':'Cormorant Garamond','Modern':'Manrope','Script':'Great Vibes'})[draft.message.font],'--word-scale':draft.message.textSize/100}}>{draft.message.words}{draft.message.date&&<small>{new Date(draft.message.date+'T12:00:00').toLocaleDateString(undefined,{month:'long',day:'numeric',year:'numeric'})}</small>}</div>
     <div className="scene-tools"><button title="Reset view" aria-label="Reset view" onClick={()=>engine.current?.fit(draft.wrap==='bow'?22:35)}><Icon name="reset" size={17}/></button><button aria-pressed={spinning} aria-label="Rotate bouquet automatically" onClick={()=>setSpinning(!spinning)}><Icon name="orbit" size={17}/></button><span>Drag to rotate · scroll to zoom</span></div>

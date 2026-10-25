@@ -136,7 +136,36 @@ h2 { font-family: var(--serif); font-size: 23px; }
 .position-handle { position: absolute; width: 18px; height: 18px; margin: -9px 0 0 -9px; border-radius: 50%; background: #20201C; box-shadow: 0 2px 6px #00000040; pointer-events: none; }
 .remove-flower { margin-top: 4px; flex-shrink: 0; padding: 9px; border: 1px solid #E3C6C3; border-radius: 10px; background: #FBF1F0; color: var(--rose); font-size: 13px; font-weight: 600; }
 .floating-words { top: 12%; }
-.bouquet-card-button { background: white; color: var(--blue); border-color: #D6E3F0; }
+
+.bouquet-open-card {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 84px;
+  height: 66px;
+  padding: 9px 5px 5px;
+  border: 1px solid #D6E3F0;
+  border-radius: 1px;
+  background: #FFFFFF;
+  color: #4A6B94;
+  box-shadow: 0 3px 9px #2C384E14;
+  transform-origin: 0 0;
+  visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  z-index: 2;
+}
+.bouquet-open-card svg { width: 21px; height: 21px; flex-shrink: 0; }
+.bouquet-open-card span { display: block; font: 10px/1.1 Inter, sans-serif; white-space: nowrap; text-align: center; }
+.bouquet-open-card:hover:not(:disabled) { background: #FFFFFF; border-color: #7AA1CF; }
+.bouquet-open-card.card-fallback { left: 50%; top: auto; bottom: 20px; margin-left: -42px; }
+.bouquet-card-dialog { width: min(490px,94vw); max-height: 90svh; }
+.bouquet-card-dialog h2 { margin-top: 4px; }
+.bouquet-card-dialog .card-artwork { width: 100%; }
+.bouquet-card-dialog .finished-note { margin: 0; }
 .stem-meter { font-size: 12px; margin: 20px 0 14px; gap: 14px; }
 .stem-meter>div { background: #D6E3F0; height: 5px; }
 .stem-meter i { background: #7AA1CF; }
