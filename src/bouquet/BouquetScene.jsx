@@ -9,6 +9,7 @@ import {arrange,stemCount} from './draft.js';
 import {cameraFrame} from './scene-layout.js';
 import BouquetCard from './BouquetCard.jsx';
 import {projectCardTag} from './card-tag.js';
+import {captureRotationFrame} from './spin-capture.js';
 
 const loader=new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
 const cache=new Map();
@@ -34,6 +35,14 @@ const BouquetScene=forwardRef(function BouquetScene({draft,onPatch,onSelect},ref
   const host=useRef(null),tagRef=useRef(null),engine=useRef(null),ready=useRef(false),selectRef=useRef(onSelect),[status,setStatus]=useState('Loading your wrap…'),[retry,setRetry]=useState(0),[failed,setFailed]=useState(false),[spinning,setSpinning]=useState(false);
   useEffect(()=>{selectRef.current=onSelect;},[onSelect]);
   useImperativeHandle(ref,()=>({
+    rotationFrame(angle,background){
+      if(!engine.current||!ready.current)return null;
+      const current=engine.current;
+      if(current.renderer.getContext().isContextLost())throw new Error('The 3D preview needs to reload before exporting.');
+      if(!current.exporting){current.exporting=true;current.gifView={position:current.camera.position.clone(),target:current.controls.target.clone()};current.controlsEnabled=current.controls.enabled;current.controls.enabled=false;}
+      return captureRotationFrame(current,angle,background);
+    },
+    finishRotation(){const current=engine.current;if(current?.exporting){current.exporting=false;current.gifView=null;current.controls.enabled=current.controlsEnabled;}},
     snapshot(width=2160){
       const current=engine.current;
       if(!current||!ready.current)return null;
@@ -79,6 +88,7 @@ const BouquetScene=forwardRef(function BouquetScene({draft,onPatch,onSelect},ref
     renderer.domElement.addEventListener('pointerup',onPointerUp);
     const reduced=matchMedia('(prefers-reduced-motion: reduce)');let raf;
     function frame(time){raf=requestAnimationFrame(frame);
+      if(state.exporting)return;
       if(tagRef.current?.getAttribute('aria-expanded')==='true')return;
       controls.update();root.children.forEach(c=>{if(c.userData.flower&&!reduced.matches)c.rotation.z=c.userData.tilt+.008*Math.sin(time*.0008+c.userData.phase);});renderer.render(scene,camera);
       const tag=tagRef.current;

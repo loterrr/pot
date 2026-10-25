@@ -261,6 +261,8 @@ h2 { font-family: var(--serif); font-size: 23px; }
 .modal h2 { font-family: var(--serif); }
 .modal p:not(.finished-note) { color: var(--secondary); }
 .manual-copy { display: block; margin: 16px 0; font-size: 13px; }
+.gif-export { margin: 24px 0; padding: 20px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.gif-export h3 { margin: 0 0 8px; font-family: var(--serif); font-size: 24px; font-weight: 400; }
 .manual-copy textarea { display: block; width: 100%; min-height: 100px; margin-top: 8px; padding: 12px; box-sizing: border-box; border: 1px solid var(--border); border-radius: 8px; font-size: 16px; overflow-wrap: anywhere; }
 .close { color: var(--secondary); }
 .toast { background: white; color: var(--ink); border-color: #A9C4E2; border-radius: 12px; box-shadow: 0 6px 20px #2C384E14; }
