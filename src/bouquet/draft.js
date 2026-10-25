@@ -39,6 +39,7 @@ export function hydrateDraft(saved){
   return {...createDraft(),...saved,shelfId:typeof saved.shelfId==='string'?saved.shelfId:null,title:typeof saved.title==='string'?saved.title:'',message:{...createDraft().message,...saved.message}};
 }
 export const stemCount=d=>Object.values(d.quantities).reduce((a,b)=>a+b,0);
+export const bouquetColor=d=>d.backdrop==='auto'?(d.accent===1?'#E2EDF8':d.accent===3?'#F1F3EF':'#EBF2F7'):d.backdrop;
 export const pairingMatches=d=>pairings.filter(p=>p.keys.every(k=>d.quantities[k]>0));
 export function updateDraft(d,action){
   let next=d;let error='';
