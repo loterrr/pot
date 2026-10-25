@@ -112,7 +112,7 @@ export async function composeBouquetImage({sceneDataUrl,background,backdropUrl,w
 export function saveImageFile(file){
   const url=URL.createObjectURL(file),link=document.createElement('a');
   link.href=url;link.download=file.name;document.body.append(link);link.click();link.remove();
-  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  setTimeout(()=>URL.revokeObjectURL(url),60000);
 }
 
 export async function shareImageFiles(files,text=''){
@@ -124,8 +124,8 @@ export async function shareImageFiles(files,text=''){
       return 'shared';
     }catch(error){
       if(error.name==='AbortError')return 'cancelled';
+      throw error;
     }
   }
-  files.forEach(saveImageFile);
-  return 'downloaded';
+  return 'unavailable';
 }

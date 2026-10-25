@@ -2,7 +2,7 @@ import {useEffect,useRef,useState} from 'react';
 import Icon from './Icon.jsx';
 import {createDraft,hydrateDraft,updateDraft,stemCount,arrange,bouquetColor} from './bouquet/draft.js';
 import {createDraftFromOccasion} from './bouquet/occasions.js';
-import {loadDraft,saveDraft,canSaveDraft,saveShelfBouquet,loadShelfDraft,deleteShelfBouquet} from './storage.js';
+import {loadDraft,saveDraft,canSaveDraft,requestPersistentStorage,saveShelfBouquet,loadShelfDraft,deleteShelfBouquet} from './storage.js';
 import ShelfDialog from './bouquet/ShelfDialog.jsx';
 import {flowerThumbnail} from './bouquet/flower-thumbnails.js';
 import {byKey} from './bouquet/catalog.js';
@@ -20,7 +20,16 @@ import CardDesigner,{CardArtwork} from './message/CardDesigner.jsx';
 import {parseYouTubeUrl,youTubeStart} from './message/media.js';
 function Dialog({title,children,onClose}){const ref=useRef(null);useEffect(()=>{const previous=document.activeElement;ref.current.showModal();return()=>{ref.current?.close();previous?.focus?.();};},[]);return <dialog ref={ref} className="modal native-dialog" onCancel={onClose}><button className="close" aria-label="Close dialog" onClick={onClose}>×</button><h2>{title}</h2>{children}</dialog>;}
 export default function App(){
- const [draft,setDraft]=useState(createDraft),[shared,setShared]=useState(undefined),[hydration,setHydration]=useState("loading"),[saveStatus,setSaveStatus]=useState('Loading draft…'),[error,setError]=useState(''),[info,setInfo]=useState(null),[designer,setDesigner]=useState(null),[preview,setPreview]=useState(false),[playSong,setPlaySong]=useState(false),[previewStatus,setPreviewStatus]=useState(''),[preparingImage,setPreparingImage]=useState(false),[includeCard,setIncludeCard]=useState(false),[selectedId,setSelectedId]=useState(null),[shelfOpen,setShelfOpen]=useState(false),[exportFormat,setExportFormat]=useState('portrait');const previewScene=useRef(null),cardExport=useRef(null),body=useRef(null),saveQueue=useRef(Promise.resolve()),saveNumber=useRef(0),errorTimer=useRef(null);
+ const [draft,setDraft]=useState(createDraft),[shared,setShared]=useState(undefined),[hydration,setHydration]=useState("loading"),[saveStatus,setSaveStatus]=useState('Loading draft…'),[error,setError]=useState(''),[info,setInfo]=useState(null),[designer,setDesigner]=useState(null),[preview,setPreview]=useState(false),[playSong,setPlaySong]=useState(false),[previewStatus,setPreviewStatus]=useState(''),[preparingImage,setPreparingImage]=useState(false),[includeCard,setIncludeCard]=useState(false),[selectedId,setSelectedId]=useState(null),[shelfOpen,setShelfOpen]=useState(false),[exportFormat,setExportFormat]=useState('portrait');const prepareRun=useRef(0),previewScene=useRef(null),cardExport=useRef(null),body=useRef(null),saveQueue=useRef(Promise.resolve()),saveNumber=useRef(0),errorTimer=useRef(null);
+ const [prepared,setPrepared]=useState(null),[preparedLink,setPreparedLink]=useState(null),[manualCopy,setManualCopy]=useState(false);
+ const exportReady=preview&&prepared?.draft===draft&&prepared.format===exportFormat&&prepared.includeCard===includeCard;
+ const linkReady=preparedLink?.draft===draft&&preparedLink.url;
+ useEffect(()=>{if(hydration==='ready'&&shared===null)void requestPersistentStorage();},[hydration,shared]);
+ useEffect(()=>{
+  if(!preview)return;let cancelled=false;setPreparedLink(null);setManualCopy(false);
+  encodeShareLink(draft,location.href.split('#')[0]).then(url=>{if(!cancelled)setPreparedLink({draft,url});}).catch(()=>{if(!cancelled)setPreparedLink({draft,error:true});});
+  return()=>{cancelled=true;};
+ },[preview,draft]);
  function notify(message){setError(message);clearTimeout(errorTimer.current);errorTimer.current=setTimeout(()=>setError(''),8000);}
  async function saveShelf(name){
   const id=draft.shelfId||crypto.randomUUID();
@@ -59,7 +68,17 @@ export default function App(){
   setDraft(createDraftFromOccasion(occasion));setDesigner(null);setSelectedId(null);closePreview();notify(`${occasion.name} bouquet started.`);
  }
  useEffect(()=>{let alive=true;if(location.hash.startsWith('#b=')){decodeShareLink(location.hash).then(value=>{if(alive)setShared(value||'invalid');}).catch(()=>{if(alive)setShared('invalid');});return()=>{alive=false;};}setShared(null);loadDraft().then(saved=>{if(!alive)return;if(saved?.version===1){setDraft(hydrateDraft(saved));if(saved.message?.designerSession)setDesigner(saved.message.designerSession.history.present);}setHydration('ready');}).catch(()=>{if(alive){setHydration('failed');setSaveStatus('Draft recovery failed. Saving paused to protect it. Reload to retry.');}});return()=>{alive=false;clearTimeout(errorTimer.current);};},[]);
- useEffect(()=>{if(shared!==null||!canSaveDraft(hydration))return;setSaveStatus('Saving…');const number=++saveNumber.current;const timer=setTimeout(()=>{saveQueue.current=saveQueue.current.catch(()=>{}).then(()=>saveDraft(draft)).then(()=>{if(number===saveNumber.current)setSaveStatus('Saved on this device');}).catch(()=>{if(number===saveNumber.current)setSaveStatus('Could not save — storage may be full. Keep this tab open.');});},350);return()=>clearTimeout(timer);},[draft,hydration,shared]);
+ useEffect(()=>{
+  if(shared!==null||!canSaveDraft(hydration))return;
+  setSaveStatus('Saving…');const number=++saveNumber.current;let queued=false;
+  const persist=()=>{
+   if(queued)return;queued=true;
+   saveQueue.current=saveQueue.current.catch(()=>{}).then(()=>saveDraft(draft)).then(()=>{if(number===saveNumber.current)setSaveStatus('Saved on this device');}).catch(()=>{if(number===saveNumber.current)setSaveStatus('Could not save — storage may be full. Keep this tab open.');});
+  };
+  const timer=setTimeout(persist,350),onHidden=()=>{if(document.visibilityState==='hidden')persist();};
+  document.addEventListener('visibilitychange',onHidden);window.addEventListener('pagehide',persist);
+  return()=>{clearTimeout(timer);document.removeEventListener('visibilitychange',onHidden);window.removeEventListener('pagehide',persist);};
+ },[draft,hydration,shared]);
  function dispatch(action){setDraft(previous=>{const result=updateDraft(previous,action);if(result.error)queueMicrotask(()=>notify(result.error));return result.draft;});}
  useEffect(()=>{setSelectedId(null);},[draft.step]);
  const selected=selectedId?arrange(draft).find(stem=>stem.id===selectedId):null;
@@ -69,7 +88,7 @@ export default function App(){
  useEffect(()=>{body.current?.scrollTo({top:0});if(matchMedia("(max-width:820px)").matches&&document.documentElement.scrollTop>0){const editor=body.current?.parentElement;const stage=document.querySelector(".preview");if(editor&&stage)window.scrollTo({top:Math.max(0,editor.offsetTop-stage.offsetHeight),behavior:"instant"});}},[draft.step]);
  const backdrop=useBlobUrl(draft.message.backdrop),color=bouquetColor(draft),hasCard=cardHasContent(draft.message);
  function openPreview(){setPreviewStatus('');setPreparingImage(false);setExportFormat('portrait');setIncludeCard(hasCard);setPreview(true);}
- function closePreview(){setPreview(false);setPlaySong(false);setPreviewStatus('');setPreparingImage(false);setIncludeCard(false);}
+ function closePreview(){prepareRun.current++;setPrepared(null);setPreparedLink(null);setManualCopy(false);setPreview(false);setPlaySong(false);setPreviewStatus('');setPreparingImage(false);setIncludeCard(false);}
  async function makeBouquetFile(){
   const sceneDataUrl=previewScene.current?.snapshot();
   if(!sceneDataUrl)throw new Error('Your bouquet is still loading. Try again in a moment.');
@@ -80,28 +99,30 @@ export default function App(){
   if(includeCard&&hasCard)files.push(draft.message.card?await captureDesignedCard(cardExport.current,draft.message.card):await composeMessageCard({message:draft.message.text,date:draft.message.date}));
   return files;
  }
- async function downloadBouquet(){
-  if(preparingImage)return;setPreparingImage(true);setPreviewStatus(includeCard&&hasCard?'Preparing both images…':'Preparing image…');
-  try{const files=await makeExportFiles();files.forEach(saveImageFile);setPreviewStatus(files.length>1?'Bouquet and card downloaded.':'Image downloaded.');}
-  catch(error){setPreviewStatus(error.message||'Could not create the image.');}
-  finally{setPreparingImage(false);}
+ async function prepareImages(){
+  if(preparingImage)return;setPreparingImage(true);setPreviewStatus('Preparing images…');
+  const snapshot={draft,format:exportFormat,includeCard},run=++prepareRun.current;
+  try{const files=await makeExportFiles();if(run!==prepareRun.current)return;setPrepared({...snapshot,files});setPreviewStatus('Images ready. Tap Share or download each image.');}
+  catch(error){if(run===prepareRun.current)setPreviewStatus(error.message||'Could not create the images.');}
+  finally{if(run===prepareRun.current)setPreparingImage(false);}
+ }
+ function downloadPrepared(file){
+  try{saveImageFile(file);setPreviewStatus('Download requested. Check Files or Downloads; this does not save directly to Photos.');}
+  catch{setPreviewStatus('Could not start the download. Try Share instead.');}
  }
  async function shareBouquet(){
-  if(preparingImage)return;setPreparingImage(true);setPreviewStatus(includeCard&&hasCard?'Preparing both images…':'Preparing image…');
+  if(!exportReady)return;
   try{
-   const files=await makeExportFiles(),result=await shareImageFiles(files,draft.message.words||'A bouquet made with flower4you');
-   setPreviewStatus(result==='shared'?(files.length>1?'Bouquet and card shared.':'Image shared.'):result==='downloaded'?(files.length>1?'Sharing two images is unavailable here, so both were downloaded.':'Sharing is unavailable here, so the image was downloaded.'):'');
-  }catch(error){setPreviewStatus(error.message||'Could not create the image.');}
-  finally{setPreparingImage(false);}
+   const result=await shareImageFiles(prepared.files,draft.message.words||'A bouquet made with flower4you');
+   setPreviewStatus(result==='shared'?'Share sheet completed.':result==='unavailable'?'File sharing is unavailable. Use the individual download buttons.':'Sharing cancelled. Your prepared images are still ready.');
+  }catch{setPreviewStatus('Could not open sharing. Tap Share again or download each image.');}
  }
  useEffect(()=>{const refresh=()=>location.reload();window.addEventListener('hashchange',refresh);return()=>window.removeEventListener('hashchange',refresh);},[]);
  function makeOwnBouquet(){history.replaceState(null,'',location.pathname+location.search);location.reload();}
  async function copyLink(){
-  try{
-   const link=await encodeShareLink(draft,location.href.split('#')[0]);
-   try{await navigator.clipboard.writeText(link);setPreviewStatus('Link copied. Photos, voice notes and photo backdrops are not included.');}
-   catch{window.prompt('Copy this bouquet link:',link);}
-  }catch{setPreviewStatus('Could not create a link for this bouquet.');}
+  if(!linkReady)return;
+  try{await navigator.clipboard.writeText(linkReady);setManualCopy(false);setPreviewStatus('Link copied. Photos, voice notes and photo backdrops are not included.');}
+  catch{setManualCopy(true);setPreviewStatus('Automatic copying is unavailable. Touch and hold the link below, then choose Copy.');}
  }
  if(shared===undefined)return <main className="shared-page shared-wait"><p>Opening your bouquet…</p></main>;
  if(shared==='invalid')return <main className="shared-page"><header className="shared-header"><span className="brand-mark"><Icon size={31}/></span><div><span className="brand-name">flower4you</span><span className="brand-note">a little love, stem by stem</span></div></header><section className="shared-body"><h1 className="shared-kicker">A bouquet for you</h1><p className="shared-copy">This link is incomplete or damaged. Ask the sender for a fresh one.</p><button className="primary" onClick={makeOwnBouquet}>Make your own bouquet</button></section></main>;
@@ -111,7 +132,7 @@ export default function App(){
  {info&&<Dialog title={info.title} onClose={()=>setInfo(null)}><p>{info.text}</p><button className="primary" onClick={()=>setInfo(null)}>Lovely</button></Dialog>}
  {designer&&<CardDesigner value={designer} message={draft.message.text} photos={draft.message.photos} session={draft.message.designerSession} savedHistory={draft.message.cardHistory} onDraft={session=>dispatch({type:"message",value:{designerSession:session}})} onCancel={()=>{setDesigner(null);dispatch({type:"message",value:{designerSession:null}});}} onError={notify} onSave={(card,cardHistory)=>{dispatch({type:"message",value:{card,cardHistory,designerSession:null}});setDesigner(null);}}/>}
  {shelfOpen&&<ShelfDialog draft={draft} onClose={()=>setShelfOpen(false)} onOpen={openShelf} onNew={startNewBouquet} onSave={saveShelf} onDuplicate={duplicateShelf} onDelete={deleteShelf}/>}
- {preview&&<Dialog title="A little something for you" onClose={closePreview}><p className="preview-subtitle">{stemCount(draft)} {stemCount(draft)===1?'stem':'stems'}, a little thought, and a whole lot of love.</p><div className="finished-bouquet" style={{backgroundColor:color}}>{backdrop&&<div className="photo-backdrop" style={{backgroundImage:`url(${backdrop})`}}/>}<BouquetScene ref={previewScene} draft={draft}/></div>{draft.message.photos.length>0&&<div className="finished-photos">{draft.message.photos.map((photo,i)=><BlobImage key={i} blob={photo} alt={'Memory '+(i+1)}/>)}</div>}{draft.message.voice&&<div className="finished-media"><h3>A note in your voice</h3><BlobAudio blob={draft.message.voice}/></div>}{parseYouTubeUrl(draft.message.song)&&<div className="finished-media">{playSong?<iframe title="Your bouquet song" src={'https://www.youtube-nocookie.com/embed/'+parseYouTubeUrl(draft.message.song)+'?autoplay=1&start='+youTubeStart(draft.message.song)} allow="autoplay; encrypted-media; picture-in-picture" allowFullScreen/>:<button className="pill rose-fill" onClick={()=>setPlaySong(true)}>♪ Play your song</button>}</div>}<div className="export-formats" role="group" aria-label="Image format">{Object.entries(imageFormats).map(([key,format])=><button key={key} className={exportFormat===key?'active':''} aria-pressed={exportFormat===key} disabled={preparingImage} onClick={()=>{setExportFormat(key);setPreviewStatus('');}}>{key[0].toUpperCase()+key.slice(1)}<small>{format.width}×{format.height}</small></button>)}</div>{hasCard&&<label className="check-label include-card"><input type="checkbox" checked={includeCard} disabled={preparingImage} onChange={event=>{setIncludeCard(event.target.checked);setPreviewStatus('');}}/>Include card</label>}<div className="share-actions"><button className="pill rose-fill" disabled={preparingImage} onClick={shareBouquet}>{includeCard&&hasCard?'Share images':'Share image'}</button><button className="pill" disabled={preparingImage} onClick={downloadBouquet}>{includeCard&&hasCard?'Download images':'Download image'}</button><button className="pill" onClick={copyLink}>Copy link</button></div><p className="local-note">Links include your bouquet, message, card text and song. Photos, voice notes and photo backdrops stay on this device.</p>{previewStatus&&<p className="share-status" role="status">{previewStatus}</p>}<p className="local-note">Saved only on this device. Nothing has been uploaded.</p><button className="primary" onClick={closePreview}>Back to editing</button></Dialog>}
+ {preview&&<Dialog title="A little something for you" onClose={closePreview}><p className="preview-subtitle">{stemCount(draft)} {stemCount(draft)===1?'stem':'stems'}, a little thought, and a whole lot of love.</p><div className="finished-bouquet" style={{backgroundColor:color}}>{backdrop&&<div className="photo-backdrop" style={{backgroundImage:`url(${backdrop})`}}/>}<BouquetScene ref={previewScene} draft={draft}/></div>{draft.message.photos.length>0&&<div className="finished-photos">{draft.message.photos.map((photo,i)=><BlobImage key={i} blob={photo} alt={'Memory '+(i+1)}/>)}</div>}{draft.message.voice&&<div className="finished-media"><h3>A note in your voice</h3><BlobAudio blob={draft.message.voice}/></div>}{parseYouTubeUrl(draft.message.song)&&<div className="finished-media">{playSong?<iframe title="Your bouquet song" src={'https://www.youtube-nocookie.com/embed/'+parseYouTubeUrl(draft.message.song)+'?autoplay=1&start='+youTubeStart(draft.message.song)} allow="autoplay; encrypted-media; picture-in-picture" allowFullScreen/>:<button className="pill rose-fill" onClick={()=>setPlaySong(true)}>♪ Play your song</button>}</div>}<div className="export-formats" role="group" aria-label="Image format">{Object.entries(imageFormats).map(([key,format])=><button key={key} className={exportFormat===key?'active':''} aria-pressed={exportFormat===key} disabled={preparingImage} onClick={()=>{setExportFormat(key);setPreviewStatus('');}}>{key[0].toUpperCase()+key.slice(1)}<small>{format.width}×{format.height}</small></button>)}</div>{hasCard&&<label className="check-label include-card"><input type="checkbox" checked={includeCard} disabled={preparingImage} onChange={event=>{setIncludeCard(event.target.checked);setPreviewStatus('');}}/>Include card</label>}<div className="share-actions">{!exportReady?<button className="pill rose-fill" disabled={preparingImage} onClick={prepareImages}>{preparingImage?'Preparing images…':'Prepare images'}</button>:<><button className="pill rose-fill" onClick={shareBouquet}>{prepared.files.length>1?'Share images':'Share image'}</button>{prepared.files.map((file,index)=><button key={file.name} className="pill" onClick={()=>downloadPrepared(file)}>Download {index===0?'bouquet':'card'}</button>)}</>}<button className="pill" disabled={!linkReady} onClick={copyLink}>{preparedLink?.error?'Link unavailable':linkReady?'Copy link':'Preparing link…'}</button></div>{preparedLink?.error&&<p role="status">Could not create a link. Close and reopen Preview to retry.</p>}{manualCopy&&linkReady&&<label className="manual-copy">Bouquet link<textarea aria-label="Bouquet link" readOnly value={linkReady} onFocus={event=>event.currentTarget.select()}/></label>}<p className="local-note">Links include your bouquet, message, card text and song. Photos, voice notes and photo backdrops stay on this device.</p>{previewStatus&&<p className="share-status" role="status">{previewStatus}</p>}<p className="local-note">Drafts stay in this browser. Clearing website data or browser storage cleanup can remove them. Nothing has been uploaded.</p><button className="primary" onClick={closePreview}>Back to editing</button></Dialog>}
  {preview&&includeCard&&draft.message.card&&<div className="card-export" aria-hidden="true"><CardArtwork artworkRef={cardExport} width={1080} card={draft.message.card} message={draft.message.text} photos={draft.message.card.photos||[]}/></div>}
  </main>;
 }

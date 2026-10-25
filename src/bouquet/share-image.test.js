@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {fitRect,wrapLines,readableInk,shareFilename,imageFormats,imageLayout} from './share-image.js';
+import {fitRect,wrapLines,readableInk,shareFilename,imageFormats,imageLayout,shareImageFiles} from './share-image.js';
 
 test('share image fits a snapshot inside its frame without distortion',()=>{
   const rect=fitRect(1200,800,1080,940,40);
@@ -47,4 +47,26 @@ test('export filenames add a suffix only for non-portrait formats',()=>{
   assert.equal(shareFilename(date),'flower4you-2026-10-25.png');
   assert.equal(shareFilename(date,'square'),'flower4you-2026-10-25-square.png');
   assert.equal(shareFilename(date,'story'),'flower4you-2026-10-25-story.png');
+});
+
+
+test('prepared files reach native sharing synchronously within the tap',async()=>{
+  const previous=Object.getOwnPropertyDescriptor(globalThis,'navigator');
+  const files=[new File(['png'],'bouquet.png',{type:'image/png'})];let called=false;
+  Object.defineProperty(globalThis,'navigator',{configurable:true,value:{canShare:()=>true,share:data=>{called=true;assert.equal(data.files,files);return Promise.resolve();}}});
+  try{const pending=shareImageFiles(files);assert.equal(called,true);assert.equal(await pending,'shared');}
+  finally{if(previous)Object.defineProperty(globalThis,'navigator',previous);else delete globalThis.navigator;}
+});
+test('unavailable sharing never silently starts unconfirmed downloads',async()=>{
+  const previous=Object.getOwnPropertyDescriptor(globalThis,'navigator');
+  Object.defineProperty(globalThis,'navigator',{configurable:true,value:{}});
+  try{assert.equal(await shareImageFiles([]),'unavailable');}
+  finally{if(previous)Object.defineProperty(globalThis,'navigator',previous);else delete globalThis.navigator;}
+});
+test('native share cancellation and rejection remain distinguishable',async()=>{
+  const previous=Object.getOwnPropertyDescriptor(globalThis,'navigator');
+  const api={canShare:()=>true,share:()=>Promise.reject(new DOMException('Cancelled','AbortError'))};
+  Object.defineProperty(globalThis,'navigator',{configurable:true,value:api});
+  try{assert.equal(await shareImageFiles([]),'cancelled');api.share=()=>Promise.reject(new Error('Denied'));await assert.rejects(shareImageFiles([]),/Denied/);}
+  finally{if(previous)Object.defineProperty(globalThis,'navigator',previous);else delete globalThis.navigator;}
 });
