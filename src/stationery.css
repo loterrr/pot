@@ -389,8 +389,8 @@ h2 { font-family: var(--serif); font-size: 23px; }
 }
 
 .bouquet-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 2px 0 14px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
-.shelf-link { border: 0; background: transparent; color: var(--blue); font-size: 11px; padding: 4px 0; text-decoration: underline; text-underline-offset: 4px; }
-.shelf-link:hover:not(:disabled) { background: transparent; border-color: transparent; color: #38567B; }
+.shelf-link { border: 1px solid var(--blue); border-radius: 9px; background: var(--blue); color: white; font-size: 13px; font-weight: 600; min-height: 44px; padding: 10px 16px; text-decoration: none; white-space: nowrap; }
+.shelf-link:hover:not(:disabled) { background: #38567B; border-color: #38567B; color: white; }
 .bouquet-title { color: var(--secondary); font-size: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .shelf-dialog { width: min(760px, calc(100vw - 32px)); max-height: min(88svh, 900px); overflow: auto; }
 .shelf-intro { font-size: 11px; line-height: 1.7; }
