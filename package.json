@@ -1,0 +1,21 @@
+{
+  "name": "flower4you",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "test": "node --test src/shelf.test.js src/bouquet/draft.test.js src/bouquet/scene-layout.test.js src/bouquet/share-image.test.js src/bouquet/share-card.test.js src/bouquet/occasions.test.js src/storage.test.js src/message/media.test.js src/message/card.test.js"
+  },
+  "dependencies": {
+    "html-to-image": "1.11.13",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "three": "0.176.0"
+  },
+  "devDependencies": {
+    "vite": "8.3.5"
+  }
+}

@@ -1,0 +1,4 @@
+export default function Icon({name='flower',size=20}){
+ const paths={flower:<><path d="M12 21v-8m0 4c-4 0-6-2-6-5 4 0 6 2 6 5Zm0-2c4 0 6-2 6-5-4 0-6 2-6 5Z"/><path d="M12 12C5 10 4 4 8 3l4 3 4-3c4 1 3 7-4 9Z"/></>,sparkle:<><path d="m12 3 2.3 6.7L21 12l-6.7 2.3L12 21l-2.3-6.7L3 12l6.7-2.3L12 3Z"/><path d="M20 2v4m-2-2h4"/></>,reset:<><path d="M4 11a8 8 0 1 1 2 7M4 5v6h6"/></>,orbit:<><ellipse cx="12" cy="12" rx="10" ry="5" transform="rotate(-30 12 12)"/><path d="M12 2v3m0 14v3"/><circle cx="12" cy="12" r="2"/></>,eye:<><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></>,info:<><circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10v.1"/></>,arrow:<><path d="M4 12h16m-6-6 6 6-6 6"/></>};
+ return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[name]||paths.flower}</svg>;
+}

@@ -1,0 +1,537 @@
+{
+  "flowers": [
+    {
+      "key": "rose",
+      "group": "Rose",
+      "name": "Red",
+      "note": "layered petals",
+      "meaning": "Deep love and devotion — the classic way to say \"I love you.\"",
+      "color": 12597547,
+      "modelPath": "/flowers/rose/rose.glb",
+      "modelScale": 1.5
+    },
+    {
+      "key": "white_rose",
+      "group": "Rose",
+      "name": "White",
+      "note": "layered petals",
+      "meaning": "Purity and new beginnings — often given at weddings and fresh starts.",
+      "color": 16052201,
+      "modelPath": "/flowers/rose/white_rose.glb",
+      "modelScale": 1.5
+    },
+    {
+      "key": "tulip_pink",
+      "group": "Tulip",
+      "name": "Pink",
+      "note": "cupped bloom",
+      "meaning": "Warm affection and caring — a gentle \"thinking of you.\"",
+      "color": 15972550,
+      "modelPath": "/flowers/tulip/tulip_pink.glb",
+      "modelScale": 1.5
+    },
+    {
+      "key": "tulip_white",
+      "group": "Tulip",
+      "name": "White",
+      "note": "cupped bloom",
+      "meaning": "Forgiveness and worthiness — a sincere, honest gesture.",
+      "color": 16052201,
+      "modelPath": "/flowers/tulip/tulip_white.glb",
+      "modelScale": 1.5
+    },
+    {
+      "key": "carnation",
+      "group": "Carnation",
+      "name": "Coral",
+      "note": "ruffled bloom",
+      "meaning": "Admiration and gratitude — warmth without grand romance.",
+      "color": 15239066,
+      "modelPath": "/flowers/carnation/carnation.glb",
+      "modelScale": 1.2
+    },
+    {
+      "key": "delphinium",
+      "group": "Delphinium",
+      "name": "Blue",
+      "note": "tall spike",
+      "meaning": "Dignity and reaching upward — encouragement to keep going.",
+      "color": 7044531,
+      "modelPath": "/flowers/del/del_bule.glb",
+      "modelScale": 1.5
+    },
+    {
+      "key": "marguerite",
+      "group": "Marguerite",
+      "name": "White",
+      "note": "cream daisy",
+      "meaning": "Innocence and loyal love — simple, honest affection.",
+      "color": 16512228,
+      "modelPath": "/flowers/markaret/markaret.glb",
+      "modelScale": 1.5,
+      "modelRot": [
+        0,
+        180,
+        0
+      ],
+      "spinDeg": 180
+    },
+    {
+      "key": "marguerite_pink",
+      "group": "Gerbera",
+      "name": "Pink",
+      "note": "pink gerbera",
+      "meaning": "Cheerful affection and warmth — a sweet, sunny hello.",
+      "color": 15972550,
+      "modelPath": "/flowers/markaret/markaret_pink.glb",
+      "modelScale": 1.5,
+      "modelRot": [
+        0,
+        180,
+        0
+      ],
+      "spinDeg": 180
+    },
+    {
+      "key": "spray_rose",
+      "group": "Spray Rose",
+      "name": "Pink",
+      "note": "cluster rose",
+      "meaning": "Gentle joy and gratitude — many small blooms, one sweet message.",
+      "color": 15245488,
+      "modelPath": "/flowers/rose/spray_rose/pink.glb",
+      "modelScale": 1.5
+    },
+    {
+      "key": "phalaenopsis",
+      "group": "Orchid",
+      "name": "White",
+      "note": "orchid spray",
+      "meaning": "Refined beauty and rare admiration — for someone extraordinary.",
+      "color": 16052201,
+      "modelPath": "/flowers/phala/white_phala.glb",
+      "modelScale": 1.5,
+      "spinDeg": 0
+    },
+    {
+      "key": "anthurium",
+      "group": "Anthurium",
+      "name": "White",
+      "note": "waxy heart",
+      "meaning": "Hospitality and happiness — a bold, open-hearted welcome.",
+      "color": 16052201,
+      "modelPath": "/flowers/anthurium/anthurium.glb",
+      "modelScale": 1.5,
+      "spinDeg": 0
+    },
+    {
+      "key": "hydrangea",
+      "group": "Hydrangea",
+      "name": "Blue",
+      "note": "full cluster",
+      "meaning": "Heartfelt understanding — \"thank you for being you.\"",
+      "color": 10333916,
+      "modelPath": "/flowers/hydrangeas/hydrangeas.glb",
+      "modelScale": 1.5
+    },
+    {
+      "key": "stock",
+      "group": "Stock",
+      "name": "Pink",
+      "note": "clustered spike",
+      "meaning": "Lasting beauty and bonds of affection — a happy, enduring life.",
+      "color": 14723272,
+      "modelPath": "/flowers/stock_in_bloom/stock_in_bloom.glb",
+      "modelScale": 1.5
+    },
+    {
+      "key": "pink_rose",
+      "group": "Rose",
+      "name": "Pink",
+      "note": "layered petals",
+      "meaning": "Grace and gratitude — admiration said gently.",
+      "color": 15239066,
+      "modelPath": "/flowers/rose/pink_rose.glb",
+      "modelScale": 1.5
+    },
+    {
+      "key": "sunflower",
+      "group": "Sunflower",
+      "name": "Yellow",
+      "note": "wide face",
+      "meaning": "Adoration and loyalty — a face that follows the one it loves.",
+      "color": 15315516,
+      "modelPath": "/flowers/sunflower/sunflower.glb",
+      "modelScale": 1.5,
+      "spinDeg": 0
+    },
+    {
+      "key": "lily_white",
+      "group": "Lily",
+      "name": "White",
+      "note": "trumpet bloom",
+      "meaning": "Purity and renewed spirit — the flower of fresh starts and remembrance.",
+      "color": 16052201,
+      "modelPath": "/flowers/lily/white.glb",
+      "modelScale": 1.85,
+      "spinDeg": 0,
+      "spinJitter": 35
+    },
+    {
+      "key": "lily_pink",
+      "group": "Lily",
+      "name": "Pink",
+      "note": "trumpet bloom",
+      "meaning": "Prosperity and admiration — warm regard, said with grace.",
+      "color": 15710662,
+      "modelPath": "/flowers/lily/pink.glb",
+      "modelScale": 1.85,
+      "spinDeg": 0,
+      "spinJitter": 35
+    },
+    {
+      "key": "lisianthus_white",
+      "group": "Lisianthus",
+      "name": "White",
+      "note": "ruffled cup",
+      "meaning": "Appreciation and a lasting bond — quiet thanks that keeps.",
+      "color": 16052201,
+      "modelPath": "/flowers/lisianthus/white.glb",
+      "modelScale": 1.5,
+      "spinDeg": 0
+    },
+    {
+      "key": "lisianthus_pink",
+      "group": "Lisianthus",
+      "name": "Pink",
+      "note": "ruffled cup",
+      "meaning": "Charm and outgoing warmth — gratitude with a soft edge.",
+      "color": 15314886,
+      "modelPath": "/flowers/lisianthus/pink.glb",
+      "modelScale": 1.5,
+      "spinDeg": 0
+    },
+    {
+      "key": "dahlia_pink",
+      "group": "Dahlia",
+      "name": "Pink",
+      "note": "layered pompon",
+      "meaning": "Commitment and a bond that holds — elegance that keeps its promise.",
+      "color": 15178680,
+      "modelPath": "/flowers/dahlia/pink.glb",
+      "modelScale": 1.5,
+      "spinDeg": 0,
+      "spinJitter": 25
+    },
+    {
+      "key": "dahlia_coral",
+      "group": "Dahlia",
+      "name": "Coral",
+      "note": "layered pompon",
+      "meaning": "Bold gratitude — a thank-you said out loud.",
+      "color": 15770216,
+      "modelPath": "/flowers/dahlia/coral.glb",
+      "modelScale": 1.5,
+      "spinDeg": 0,
+      "spinJitter": 25
+    },
+    {
+      "key": "ranunculus_blush",
+      "group": "Ranunculus",
+      "name": "Blush",
+      "note": "spiral petals",
+      "meaning": "Radiant charm — \"I am dazzled by you.\"",
+      "color": 15982306,
+      "modelPath": "/flowers/ranunculus/blush.glb",
+      "modelScale": 1.5,
+      "spinDeg": 0,
+      "spinJitter": 25
+    },
+    {
+      "key": "ranunculus_peach",
+      "group": "Ranunculus",
+      "name": "Peach",
+      "note": "spiral petals",
+      "meaning": "Warm attraction and easy company — charm without the fuss.",
+      "color": 15716256,
+      "modelPath": "/flowers/ranunculus/peach.glb",
+      "modelScale": 1.5,
+      "spinDeg": 0,
+      "spinJitter": 25
+    },
+    {
+      "key": "hydrangea_pink",
+      "group": "Hydrangea",
+      "name": "Pink",
+      "note": "full cluster",
+      "meaning": "Heartfelt emotion — a hundred small florets saying one big thing.",
+      "color": 15311038,
+      "modelPath": "/flowers/hydrangeas/pink.glb",
+      "modelScale": 1.5
+    },
+    {
+      "key": "eucalyptus",
+      "group": "Eucalyptus",
+      "name": "Green",
+      "note": "round leaves",
+      "kind": "leaf",
+      "meaning": "Protection and a clear head — the green that calms a bouquet down.",
+      "color": 8294758,
+      "modelPath": "/flowers/greens/eucalyptus.glb",
+      "modelScale": 1.5
+    },
+    {
+      "key": "eucalyptus_silver",
+      "group": "Eucalyptus",
+      "name": "Silver",
+      "note": "round leaves",
+      "kind": "leaf",
+      "meaning": "Quiet abundance — soft grey-green that lets the flowers speak.",
+      "color": 10464919,
+      "modelPath": "/flowers/greens/eucalyptus_silver.glb",
+      "modelScale": 1.5
+    },
+    {
+      "key": "sprig_green",
+      "group": "Sprig",
+      "name": "Green",
+      "note": "leafy stem",
+      "kind": "leaf",
+      "meaning": "Renewal — the new growth a bouquet needs to look alive.",
+      "color": 7309902,
+      "modelPath": "/flowers/greens/sprig_green.glb",
+      "modelScale": 1.5
+    },
+    {
+      "key": "sprig_olive",
+      "group": "Sprig",
+      "name": "Olive",
+      "note": "leafy stem",
+      "kind": "leaf",
+      "meaning": "Peace offered plainly — the oldest way to say it.",
+      "color": 6122315,
+      "modelPath": "/flowers/greens/sprig_olive.glb",
+      "modelScale": 1.5
+    },
+    {
+      "key": "lavender_rose",
+      "group": "Rose",
+      "name": "Lavender",
+      "note": "layered petals",
+      "meaning": "Enchantment and love at first sight — wonder, said softly.",
+      "color": 12032992,
+      "modelPath": "/flowers/rose/lavender_rose.glb",
+      "modelScale": 1.5
+    },
+    {
+      "key": "anthurium_green",
+      "group": "Anthurium",
+      "name": "Green",
+      "note": "waxy heart",
+      "meaning": "Growth and good fortune — a fresh, hopeful welcome.",
+      "color": 13230714,
+      "modelPath": "/flowers/anthurium/green.glb",
+      "modelScale": 1.5,
+      "spinDeg": 0
+    },
+    {
+      "key": "anthurium_pink",
+      "group": "Anthurium",
+      "name": "Pink",
+      "note": "waxy heart",
+      "meaning": "Romance and happiness — an open heart, said sweetly.",
+      "color": 16305621,
+      "modelPath": "/flowers/anthurium/pink.glb",
+      "modelScale": 1.5,
+      "spinDeg": 0
+    },
+    {
+      "key": "gerbera_white",
+      "group": "Gerbera",
+      "name": "White",
+      "note": "white gerbera",
+      "meaning": "Innocence and cheer — a bright, clean-hearted hello.",
+      "color": 16513007,
+      "modelPath": "/flowers/markaret/gerbera_white.glb",
+      "modelScale": 1.5,
+      "modelRot": [
+        0,
+        180,
+        0
+      ],
+      "spinDeg": 180
+    },
+    {
+      "key": "carnation_white",
+      "group": "Carnation",
+      "name": "White",
+      "note": "ruffled bloom",
+      "meaning": "Pure love and good luck — an honest, simple kindness.",
+      "color": 16249836,
+      "modelPath": "/flowers/carnation/carnation_white.glb",
+      "modelScale": 1.2
+    }
+  ],
+  "wraps": [
+    {
+      "key": "segment",
+      "name": "Segment",
+      "path": "/flowers/bouquets/bouquet_segment.glb",
+      "bottomR": 0.4,
+      "topR": 1.05,
+      "modelScale": 1,
+      "tag": {
+        "x": 0,
+        "y": -0.5,
+        "len": 0.28,
+        "scale": 1,
+        "gap": 0.34
+      },
+      "colorGroups": [
+        {
+          "label": "Paper",
+          "parts": [
+            "model_part0",
+            "model_part2"
+          ],
+          "roughness": 0.98,
+          "metalness": 0,
+          "options": [
+            {
+              "name": "White",
+              "color": 16052201
+            },
+            {
+              "name": "Polka",
+              "color": 16052201,
+              "pattern": "polka",
+              "dot": 2105372
+            }
+          ]
+        },
+        {
+          "label": "Accent",
+          "parts": [
+            "model_part1",
+            "model_part3",
+            "model_part5"
+          ],
+          "roughness": 0.5,
+          "metalness": 0,
+          "options": [
+            {
+              "name": "Pink",
+              "color": 15972550
+            },
+            {
+              "name": "Blue",
+              "color": 7044531
+            },
+            {
+              "name": "Gold",
+              "color": 16309132,
+              "hidden": true
+            },
+            {
+              "name": "Black",
+              "color": 2105372
+            },
+            {
+              "name": "Cream",
+              "color": 16773314
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "bow",
+      "name": "Bow",
+      "path": "/flowers/bouquets/bouquet_bow.glb",
+      "bottomR": 0.45,
+      "topR": 1.04,
+      "modelScale": 0.8,
+      "camElev": 22,
+      "flowerHeight": 0.8,
+      "tag": {
+        "x": 0,
+        "y": -0.5,
+        "len": 0.28,
+        "scale": 1,
+        "gap": 0.34
+      },
+      "colorGroups": [
+        {
+          "label": "Paper",
+          "parts": [
+            "wrap_paper",
+            "waist_closure"
+          ],
+          "roughness": 0.9,
+          "metalness": 0,
+          "options": [
+            {
+              "name": "White",
+              "color": 16052201
+            },
+            {
+              "name": "Polka",
+              "color": 16052201,
+              "pattern": "polka",
+              "dot": 2105372
+            }
+          ]
+        },
+        {
+          "label": "Accent",
+          "parts": [
+            "wrap_ribbon",
+            "bow_backing"
+          ],
+          "roughness": 0.5,
+          "metalness": 0,
+          "options": [
+            {
+              "name": "Pink",
+              "color": 15972550
+            },
+            {
+              "name": "Blue",
+              "color": 7044531
+            },
+            {
+              "name": "Gold",
+              "color": 16309132,
+              "hidden": true
+            },
+            {
+              "name": "Black",
+              "color": 2105372
+            },
+            {
+              "name": "Cream",
+              "color": 16773314
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "sizes": [
+    {
+      "name": "Small",
+      "stems": 10,
+      "wrapScale": 0.9
+    },
+    {
+      "name": "Medium",
+      "stems": 16,
+      "wrapScale": 0.95
+    },
+    {
+      "name": "Large",
+      "stems": 20,
+      "wrapScale": 1
+    }
+  ]
+}

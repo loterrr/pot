@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.superpowers/
+.impeccable/
+test-results/
+docs/
+scripts/
+tests/
