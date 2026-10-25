@@ -2,11 +2,11 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {cardAspects,cardFilename,cardHasContent,cardImageSize,messageCardFilename} from './share-card.js';
 
-test('card exports keep the designed aspect ratio at 1080px wide',()=>{
-  assert.deepEqual(cardImageSize({size:'Card'}),{width:1080,height:1350});
-  assert.deepEqual(cardImageSize({size:'Square'}),{width:1080,height:1080});
-  assert.deepEqual(cardImageSize({size:'Story'}),{width:1080,height:1920});
-  assert.deepEqual(cardImageSize(),{width:1080,height:1350});
+test('card exports keep the designed aspect ratio at 2160px wide',()=>{
+  assert.deepEqual(cardImageSize({size:'Card'}),{width:2160,height:2700});
+  assert.deepEqual(cardImageSize({size:'Square'}),{width:2160,height:2160});
+  assert.deepEqual(cardImageSize({size:'Story'}),{width:2160,height:3840});
+  assert.deepEqual(cardImageSize(),{width:2160,height:2700});
   assert.deepEqual(cardAspects,{Card:4/5,Square:1,Story:9/16});
 });
 

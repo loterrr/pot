@@ -32,11 +32,22 @@ const BouquetScene=forwardRef(function BouquetScene({draft,onPatch,onSelect},ref
   const host=useRef(null),engine=useRef(null),ready=useRef(false),selectRef=useRef(onSelect),[status,setStatus]=useState('Loading your wrap…'),[retry,setRetry]=useState(0),[failed,setFailed]=useState(false),[spinning,setSpinning]=useState(false);
   useEffect(()=>{selectRef.current=onSelect;},[onSelect]);
   useImperativeHandle(ref,()=>({
-    snapshot(){
+    snapshot(width=2160){
       const current=engine.current;
       if(!current||!ready.current)return null;
-      current.renderer.render(current.scene,current.camera);
-      return current.renderer.domElement.toDataURL('image/png');
+      const {renderer,camera,scene}=current,canvas=renderer.domElement;
+      const cssWidth=canvas.clientWidth||1,cssHeight=canvas.clientHeight||1,size=new THREE.Vector2(),ratio=renderer.getPixelRatio(),aspect=camera.aspect;
+      renderer.getSize(size);
+      // Render at export resolution without changing the preview framing.
+      try{
+        renderer.setPixelRatio(1);renderer.setSize(width,Math.max(1,Math.round(width*cssHeight/cssWidth)),false);
+        camera.aspect=cssWidth/cssHeight;camera.updateProjectionMatrix();
+        renderer.render(scene,camera);
+        return canvas.toDataURL('image/png');
+      }finally{
+        renderer.setPixelRatio(ratio);renderer.setSize(size.x,size.y,false);
+        camera.aspect=aspect;camera.updateProjectionMatrix();
+      }
     }
   }),[]);
   useEffect(()=>{

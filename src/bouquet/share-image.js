@@ -1,8 +1,8 @@
 const wordFonts={Classic:'Cormorant Garamond',Elegant:'Cormorant Garamond',Modern:'Manrope',Script:'Great Vibes'};
 export const imageFormats={
-  portrait:{width:1080,height:1350,sceneTop:210,sceneHeight:940,scenePadding:40,wordTop:112,wordSize:46,brandInset:104},
-  square:{width:1080,height:1080,sceneTop:170,sceneHeight:760,scenePadding:40,wordTop:84,wordSize:42,brandInset:88},
-  story:{width:1080,height:1920,sceneTop:250,sceneHeight:1400,scenePadding:40,wordTop:140,wordSize:52,brandInset:116},
+  portrait:{width:2160,height:2700,sceneTop:420,sceneHeight:1880,scenePadding:80,wordTop:224,wordSize:92,brandInset:208},
+  square:{width:2160,height:2160,sceneTop:340,sceneHeight:1520,scenePadding:80,wordTop:168,wordSize:84,brandInset:176},
+  story:{width:2160,height:3840,sceneTop:500,sceneHeight:2800,scenePadding:80,wordTop:280,wordSize:104,brandInset:232},
 };
 export function imageLayout(format='portrait'){
   return imageFormats[format]||imageFormats.portrait;
@@ -74,7 +74,7 @@ export async function composeBouquetImage({sceneDataUrl,background,backdropUrl,w
   if(backdropUrl){
     try{
       const backdrop=await loadImage(backdropUrl);
-      ctx.save();ctx.filter='blur(18px)';ctx.globalAlpha=.5;drawCover(ctx,backdrop,width,height);ctx.restore();
+      ctx.save();ctx.filter='blur(36px)';ctx.globalAlpha=.5;drawCover(ctx,backdrop,width,height);ctx.restore();
     }catch{}
   }
   const scene=await loadImage(sceneDataUrl);
@@ -88,21 +88,21 @@ export async function composeBouquetImage({sceneDataUrl,background,backdropUrl,w
   ctx.fillStyle=wordColor||ink;
   let top=layout.wordTop;
   if(words.trim()){
-    for(const line of wrapLines(words.trim(),width-180,value=>ctx.measureText(value).width)){
+    for(const line of wrapLines(words.trim(),width-360,value=>ctx.measureText(value).width)){
       ctx.fillText(line,width/2,top);top+=size*1.18;
     }
   }
   if(date){
-    ctx.font='20px Manrope, sans-serif';ctx.globalAlpha=.72;
-    ctx.fillText(new Date(date+'T12:00:00').toLocaleDateString(undefined,{month:'long',day:'numeric',year:'numeric'}),width/2,top+4);
+    ctx.font='40px Manrope, sans-serif';ctx.globalAlpha=.72;
+    ctx.fillText(new Date(date+'T12:00:00').toLocaleDateString(undefined,{month:'long',day:'numeric',year:'numeric'}),width/2,top+8);
     ctx.globalAlpha=1;
   }
 
-  ctx.font='500 26px "Playfair Display", Georgia, serif';
-  const brand='flower4you',brandWidth=ctx.measureText(brand).width+64,brandY=height-layout.brandInset;
+  ctx.font='500 52px "Playfair Display", Georgia, serif';
+  const brand='flower4you',brandWidth=ctx.measureText(brand).width+128,brandY=height-layout.brandInset;
   ctx.fillStyle='rgba(255,255,255,.88)';
-  ctx.beginPath();ctx.roundRect((width-brandWidth)/2,brandY,brandWidth,56,28);ctx.fill();
-  ctx.fillStyle='#2C384E';ctx.fillText(brand,width/2,brandY+37);
+  ctx.beginPath();ctx.roundRect((width-brandWidth)/2,brandY,brandWidth,112,56);ctx.fill();
+  ctx.fillStyle='#2C384E';ctx.fillText(brand,width/2,brandY+74);
 
   const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
   if(!blob)throw new Error('This browser could not create the bouquet image.');

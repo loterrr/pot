@@ -19,7 +19,7 @@ Open the URL printed by Vite. Use `npm test` for logic checks and `npm run build
 - A named local bouquet shelf: save or update explicitly, then reopen, duplicate or delete bouquets. Starting a new bouquet does not remove shelf entries.
 - A 70-character message, YouTube song selection, voice recording up to 60 seconds, four memory photos and a backdrop photo.
 - Floating bouquet text and date, six-template card designer with text/photos/stickers/backgrounds, movement, resizing, rotation, touch pinch, undo and redo.
-- IndexedDB recovery of the bouquet, media and unfinished designer. The final preview can share or download a PNG in portrait 1080×1350, square 1080×1080 or story 1080×1920.
+- IndexedDB recovery of the bouquet, media and unfinished designer. The final preview can share or download a lossless PNG in portrait 2160×2700, square 2160×2160 or story 2160×3840.
 
 Photos accept JPEG, PNG, WebP and GIF up to 10 MB each. Microphone access requires localhost or HTTPS and browser permission. YouTube playback uses the external YouTube embed only when activated; embedding depends on the video's restrictions and network access. Fonts and model assets otherwise load locally.
 

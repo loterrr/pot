@@ -7,7 +7,7 @@ export function cardHasContent(message){
 }
 
 export function cardImageSize(card){
-  const width=1080,aspect=cardAspects[card?.size]||cardAspects.Card;
+  const width=2160,aspect=cardAspects[card?.size]||cardAspects.Card;
   return {width,height:Math.round(width/aspect)};
 }
 
@@ -29,10 +29,11 @@ function fileFromCanvas(canvas,name){
 export async function composeMessageCard({message,date=''}={}){
   const text=String(message||'').trim();
   if(!text)throw new Error('There is no message to put on the card.');
-  const width=1080,height=1350;
-  const canvas=document.createElement('canvas');canvas.width=width;canvas.height=height;
+  const scale=2,width=1080,height=1350;
+  const canvas=document.createElement('canvas');canvas.width=width*scale;canvas.height=height*scale;
   const ctx=canvas.getContext('2d');
   if(!ctx)throw new Error('This browser could not create the card image.');
+  ctx.scale(scale,scale);
   await document.fonts?.ready;
 
   ctx.fillStyle='#EBF2F7';ctx.fillRect(0,0,width,height);
@@ -81,7 +82,7 @@ export async function composeMessageCard({message,date=''}={}){
 export async function captureDesignedCard(node,card){
   if(!node)throw new Error('The card is not ready to share yet.');
   const {toBlob}=await import('html-to-image');
-  const blob=await toBlob(node,{pixelRatio:1});
+  const blob=await toBlob(node,{pixelRatio:2});
   if(!blob)throw new Error('This browser could not create the card image.');
   return new File([blob],cardFilename(new Date(),card),{type:'image/png'});
 }

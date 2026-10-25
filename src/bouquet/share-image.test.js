@@ -26,10 +26,10 @@ test('share image filename is dated and stable',()=>{
   assert.equal(shareFilename(new Date('2026-10-25T12:00:00Z')),'flower4you-2026-10-25.png');
 });
 
-test('export formats provide the expected canvas sizes',()=>{
-  assert.deepEqual([imageFormats.portrait.width,imageFormats.portrait.height],[1080,1350]);
-  assert.deepEqual([imageFormats.square.width,imageFormats.square.height],[1080,1080]);
-  assert.deepEqual([imageFormats.story.width,imageFormats.story.height],[1080,1920]);
+test('export formats provide the expected HD canvas sizes',()=>{
+  assert.deepEqual([imageFormats.portrait.width,imageFormats.portrait.height],[2160,2700]);
+  assert.deepEqual([imageFormats.square.width,imageFormats.square.height],[2160,2160]);
+  assert.deepEqual([imageFormats.story.width,imageFormats.story.height],[2160,3840]);
 });
 
 test('export layouts keep the scene inside the canvas',()=>{
