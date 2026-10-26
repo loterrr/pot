@@ -1,12 +1,12 @@
 import data from './catalog-data.json' with {type:'json'};
-export const flowers=data.flowers;
+export const flowers=data.flowers.filter(flower=>!flower.hidden);
 export const wraps=data.wraps;
 export const groups=flowers.reduce((list,flower)=>{
   let group=list.find(g=>g.name===flower.group);
   if(!group){group={name:flower.group,kind:flower.kind||'flower',variants:[]};list.push(group);}
   group.variants.push(flower);return list;
 },[]);
-export const byKey=Object.fromEntries(flowers.map(f=>[f.key,f]));
+export const byKey=Object.fromEntries(data.flowers.map(f=>[f.key,f]));
 export const hex=value=>'#'+value.toString(16).padStart(6,'0');
 export const backdrops=['#faf9f6','#f6e7e4','#eaf0e7','#e7eef4','#f3ecdd'];
 export const pairings=[

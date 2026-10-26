@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
-import {byKey,flowers,wraps} from './catalog.js';
+import {byKey,flowers,wraps,groups} from './catalog.js';
 
 test('curated colors retain existing species and GLBs, including six additional lilies',()=>{
  for(const shade of ['yellow','orange','peach','coral','lavender','burgundy']){
@@ -63,4 +63,13 @@ test('wrap thumbnails resolve vase cache keys to ribbon-free catalog models',asy
   const model=await buildThumbnailModel({key:'wrap-'+key,group:'wrap'});
   assert.equal(model.children.length,1);assert.ok(model.getObjectByName('wrap_surface'));disposeModel(model);
  }
+});
+
+
+test('lily picker has five colors including blue while retired colors still resolve',()=>{
+ const lilies=groups.find(group=>group.name==='Lily').variants;
+ assert.deepEqual(lilies.map(lily=>lily.name),['White','Pink','Blue','Lavender','Burgundy']);
+ assert.equal(byKey.lily_blue.petalColor,'#6d91d8');assert.equal(byKey.lily_blue.modelPath,'/flowers/lily/white.glb');
+ assert.ok(byKey.lily_yellow);assert.ok(!flowers.some(flower=>flower.key==='lily_yellow'));
+ assert.equal(byKey.dahlia_black.name,'Black');assert.equal(byKey.dahlia_black.petalColor,'#241a22');
 });

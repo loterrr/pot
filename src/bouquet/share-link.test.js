@@ -188,3 +188,10 @@ test('every curated color and ribbon-free vase survives a recipient link',async(
   assert.equal(opened.wrap,wrap.key);assert.equal(opened.size,16);assert.equal(opened.paper,9);assert.equal(opened.surfaceColor,'#AABBCC');assert.equal(opened.surfacePattern,'stripe');
  }
 });
+
+
+test('retired lily colors remain readable in existing bouquet links',async()=>{
+ const old=updateDraft(createDraft(),{type:'add',key:'lily_yellow'}).draft;
+ const opened=await decodeShareLink(await encodeShareLink(old,'https://example.test/'));
+ assert.equal(opened.stems[0].key,'lily_yellow');assert.equal(opened.quantities.lily_yellow,1);
+});
