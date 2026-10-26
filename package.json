@@ -7,7 +7,7 @@
     "dev": "vite --host 127.0.0.1",
     "build": "vite build",
     "preview": "vite preview --host 127.0.0.1",
-    "test": "node --test src/shelf.test.js src/bouquet/draft.test.js src/bouquet/scene-layout.test.js src/bouquet/card-tag.test.js src/bouquet/share-image.test.js src/bouquet/share-card.test.js src/bouquet/share-link.test.js src/bouquet/occasions.test.js src/storage.test.js src/message/media.test.js src/message/card.test.js src/bouquet/spinning-gif.test.js"
+    "test": "node --test src/shelf.test.js src/bouquet/draft.test.js src/bouquet/scene-layout.test.js src/bouquet/card-tag.test.js src/bouquet/share-image.test.js src/bouquet/share-card.test.js src/bouquet/share-link.test.js src/bouquet/occasions.test.js src/storage.test.js src/message/media.test.js src/message/card.test.js src/bouquet/spinning-gif.test.js src/bouquet/catalog-vases-ui.test.js src/bouquet/bouquet-models.test.js src/bouquet/model-materials.test.js"
   },
   "dependencies": {
     "gifenc": "1.0.3",

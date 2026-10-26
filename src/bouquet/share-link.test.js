@@ -164,3 +164,27 @@ test('photo-only cards leave a plain message available to the receiver',async()=
   assert.equal(decoded.message.card,null);
   assert.equal(decoded.message.text,draft.message.text);
 });
+
+
+test('forty stems and custom wrap materials survive the share link without unsafe values',async()=>{
+ const draft=updateDraft({...createDraft(),size:40,ribbonColor:'#123456',surfaceColor:'#AABBCC',surfacePattern:'stripe'},{type:'surprise'}).draft;
+ const decoded=await decodeShareLink(await encodeShareLink(draft,'https://example.test/'));
+ assert.equal(decoded.size,40);assert.equal(decoded.stems.length,40);assert.equal(decoded.ribbonColor,'#123456');assert.equal(decoded.surfaceColor,'#AABBCC');assert.equal(decoded.surfacePattern,'stripe');
+ const {hydrateSharedState}=await import('./share-link.js');const payload=shareState(draft);payload.ribbonColor='url(bad)';payload.surfaceColor='red;';payload.surfacePattern='<img>';
+ const safe=hydrateSharedState(payload);assert.equal(safe.ribbonColor,null);assert.equal(safe.surfaceColor,null);assert.equal(safe.surfacePattern,null);
+});
+
+
+test('every curated color and ribbon-free vase survives a recipient link',async()=>{
+ const {flowers,wraps}=await import('./catalog.js');
+ for(const flower of flowers){
+  const draft=updateDraft({...createDraft(),size:1},{type:'add',key:flower.key}).draft;
+  const opened=await decodeShareLink(await encodeShareLink(draft,'https://example.test/'));
+  assert.equal(opened.stems[0].key,flower.key);
+ }
+ for(const wrap of wraps){
+  const draft={...createDraft(),size:16,wrap:wrap.key,surfaceColor:'#AABBCC',surfacePattern:'stripe',paper:9,ribbonColor:'#123456'};
+  const opened=await decodeShareLink(await encodeShareLink(draft,'https://example.test/'));
+  assert.equal(opened.wrap,wrap.key);assert.equal(opened.size,16);assert.equal(opened.paper,9);assert.equal(opened.surfaceColor,'#AABBCC');assert.equal(opened.surfacePattern,'stripe');
+ }
+});

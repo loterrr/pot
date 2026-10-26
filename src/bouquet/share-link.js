@@ -1,5 +1,5 @@
 import {byKey,wraps} from './catalog.js';
-import {arrange,createDraft} from './draft.js';
+import {arrange,createDraft,validCapacity,materialColor} from './draft.js';
 import {templateNames} from '../message/card.js';
 import {limitMessage,parseYouTubeUrl} from '../message/media.js';
 import {cardAspects} from './share-card.js';
@@ -36,7 +36,7 @@ function compactCard(card){
 }
 
 export function shareState(draft){
-  const stems=arrange(draft).slice(0,20);
+  const stems=arrange(draft).slice(0,40);
   return {
     v:1,
     wrap:draft.wrap,
@@ -46,6 +46,7 @@ export function shareState(draft){
     seed:draft.seed,
     paper:draft.paper,
     accent:draft.accent,
+    ribbonColor:materialColor(draft.ribbonColor),surfaceColor:materialColor(draft.surfaceColor),surfacePattern:['plain','polka','stripe'].includes(draft.surfacePattern)?draft.surfacePattern:null,
     backdrop:draft.backdrop,
     quantities:Object.fromEntries(Object.entries(draft.quantities||{}).filter(([key,count])=>Object.hasOwn(byKey,key)&&count>0)),
     stems:stems.map(stem=>[stem.key,+stem.x.toFixed(3),+stem.z.toFixed(3),Math.round(stem.spin),+stem.height.toFixed(2)]),
@@ -94,7 +95,7 @@ function decodeCard(value){
 
 export function hydrateSharedState(state){
   if(!state||typeof state!=='object'||state.v!==1)return null;
-  const size=pick(Number(state.size),[10,16,20],20);
+  const size=validCapacity(Number(state.size))?Number(state.size):20;
   const quantities={};
   let total=0;
   for(const [key,count] of Object.entries(state.quantities&&typeof state.quantities==='object'?state.quantities:{})){
@@ -119,6 +120,7 @@ export function hydrateSharedState(state){
     seed:Math.floor(clamp(state.seed,0,1e9,42)),
     paper:Math.floor(clamp(state.paper,0,10,0)),
     accent:Math.floor(clamp(state.accent,0,10,0)),
+    ribbonColor:materialColor(state.ribbonColor),surfaceColor:materialColor(state.surfaceColor),surfacePattern:pick(state.surfacePattern,['plain','polka','stripe'],null),
     backdrop:state.backdrop==='auto'||HEX.test(state.backdrop)?state.backdrop:'auto',
     quantities,
     stems,

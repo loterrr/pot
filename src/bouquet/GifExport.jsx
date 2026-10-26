@@ -37,7 +37,7 @@ export default function GifExport({sceneRef,background,draft}){
   }catch{setStatus('Could not share the GIF. Try Download GIF instead.');}
  }
  return <section className="gif-export" aria-label="Spinning bouquet GIF">
-  <h3>Keep it spinning</h3><p className="local-note">A three-second, 480px loop of your bouquet on its solid backdrop. No message card, photos or audio.</p>
+  <h3>Keep it spinning</h3><p className="local-note">A {gifSettings.frames*gifSettings.delay/1000}-second, 480px loop of your bouquet on its solid backdrop. No message card, photos or audio.</p>
   <div className="share-actions">{progress!==null?<><button className="pill" disabled>Creating GIF… {progress}%</button><button className="pill" onClick={()=>{stop();setStatus('GIF export cancelled.');}}>Cancel GIF</button></>:<button className="pill" onClick={prepare}>{file?'Create GIF again':'Save spinning GIF'}</button>}
   {file&&<><button className="pill rose-fill" onClick={()=>{try{saveImageFile(file);setStatus('GIF download requested. Check Files or Downloads.');}catch{setStatus('Could not start the download. Try Share GIF.');}}}>Download GIF</button><button className="pill" onClick={share}>Share GIF</button></>}</div>
   {status&&<p className="share-status" role="status">{status}</p>}

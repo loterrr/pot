@@ -92,3 +92,21 @@ test('draft hydration preserves shelf link and fills new defaults',()=>{
   assert.equal(draft.message.words,'');
   assert.equal(draft.step,0);
 });
+
+
+test('expanded capacities accept integers one to forty and never discard selected stems',()=>{
+ for(let size=1;size<=40;size++){
+  const d=updateDraft(updateDraft(createDraft(),{type:'size',value:size}).draft,{type:'surprise'}).draft;
+  assert.equal(d.size,size);assert.equal(stemCount(d),size);assert.equal(arrange(d).length,size);
+ }
+ for(const value of [0,41,NaN,2.5,'20'])assert.ok(updateDraft(createDraft(),{type:'size',value}).error);
+ const full=updateDraft({...createDraft(),size:40},{type:'surprise'}).draft;
+ assert.equal(updateDraft(full,{type:'size',value:20}).draft,full);
+});
+test('old drafts gain safe material defaults without changing legacy capacity or message',()=>{
+ const restored=hydrateDraft({...createDraft(),size:16,message:{...createDraft().message,text:'My note'}});
+ assert.equal(restored.size,16);assert.equal(restored.message.text,'My note');
+ assert.equal(restored.ribbonColor,null);assert.equal(restored.surfaceColor,null);assert.equal(restored.surfacePattern,null);
+ const invalid=hydrateDraft({...createDraft(),ribbonColor:'url(bad)',surfaceColor:'red;',surfacePattern:'unknown'});
+ assert.equal(invalid.ribbonColor,null);assert.equal(invalid.surfaceColor,null);assert.equal(invalid.surfacePattern,null);
+});

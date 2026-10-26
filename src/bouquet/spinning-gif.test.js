@@ -2,8 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createSpinningGif,gifSettings,rotationAngle} from './spinning-gif.js';
 
-test('the spinning loop has sixty unique frames spanning three seconds',()=>{
- assert.equal(gifSettings.frames*gifSettings.delay,3000);
+test('the spinning loop keeps sixty unique frames with configured timing',()=>{
+ assert.equal(gifSettings.frames,60);assert.ok(Number.isInteger(gifSettings.delay)&&gifSettings.delay>=20&&gifSettings.delay<=200);
  assert.equal(gifSettings.size,480);
  assert.equal(rotationAngle(0),0);
  assert.ok(rotationAngle(59)<Math.PI*2);
@@ -18,6 +18,7 @@ test('the encoder produces an animated looping GIF from RGBA frames',()=>{
  assert.equal(bytes[6]|bytes[7]<<8,2);assert.equal(bytes[8]|bytes[9]<<8,2);
  assert.ok(new TextDecoder().decode(bytes).includes('NETSCAPE2.0'));
  assert.equal(bytes.at(-1),0x3b);
+ const control=bytes.findIndex((value,index)=>value===0x21&&bytes[index+1]===0xf9);assert.ok(control>=0);assert.equal(bytes[control+4]|bytes[control+5]<<8,Math.round(gifSettings.delay/10));
 });
 test('invalid frames and empty exports fail explicitly',()=>{
  const encoder=createSpinningGif(2,2);

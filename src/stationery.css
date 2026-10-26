@@ -226,8 +226,8 @@ h2 { font-family: var(--serif); font-size: 23px; }
 .info-button { display: flex; color: var(--secondary); padding: 4px; }
 .variant-label { color: var(--secondary); font-size: 9px; line-height: 1.5; display: block; margin: 5px 0 12px; min-height: 27px; }
 .flower-tile-controls { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
-.flower-variants { min-height: 25px; margin: 0 0 9px; flex: 0 0 100%; justify-content: flex-start; gap: 10px; }
-.flower-variants .swatch { width: 19px; height: 19px; box-shadow: 0 0 0 1px white; }
+.flower-variants { min-height: 25px; margin: 0 0 9px; flex: 0 0 100%; flex-wrap: wrap; justify-content: flex-start; gap: 10px; }
+.flower-variants .swatch { width: 19px; height: 19px; flex-shrink: 0; box-shadow: 0 0 0 1px white; }
 .flower-variants .swatch.selected { box-shadow: 0 0 0 2px var(--blue); }
 .quantity { height: 29px; width: 31px; border-radius: 7px; font-size: 17px; }
 .quantity.plus { background: #E2EDF8; color: var(--blue); border-color: #D6E3F0; }
@@ -393,6 +393,12 @@ h2 { font-family: var(--serif); font-size: 23px; }
 .bouquet-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 2px 0 14px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
 .shelf-link { border: 1px solid var(--blue); border-radius: 9px; background: var(--blue); color: white; font-size: 13px; font-weight: 600; min-height: 44px; padding: 10px 16px; text-decoration: none; white-space: nowrap; }
 .shelf-link:hover:not(:disabled) { background: #38567B; border-color: #38567B; color: white; }
+.wrap-options { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); }
+.count-presets { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); }
+.capacity-custom,.ribbon-custom { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin: 16px 0; font-size: 12px; }
+.capacity-custom input { width: 76px; min-height: 44px; padding: 8px; }
+.capacity-custom span { color: var(--secondary); font-size: 11px; }
+.ribbon-custom input[type=color] { width: 56px; min-height: 44px; padding: 4px; border-radius: 8px; }
 .bouquet-title { color: var(--secondary); font-size: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .shelf-dialog { width: min(760px, calc(100vw - 32px)); max-height: min(88svh, 900px); overflow: auto; }
 .shelf-intro { font-size: 11px; line-height: 1.7; }

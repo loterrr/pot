@@ -2,6 +2,9 @@ import {flowers,byKey,pairings} from './catalog.js';
 export const STEM_RADIUS=.85,STEM_HEIGHT_MIN=-.5,STEM_HEIGHT_MAX=1.5;
 const clamp=(value,min,max)=>Math.min(max,Math.max(min,value));
 const finite=(value,fallback)=>Number.isFinite(value)?value:fallback;
+export const validCapacity=value=>Number.isInteger(value)&&value>=1&&value<=40;
+export const materialColor=value=>typeof value==='string'&&/^#[0-9a-f]{6}$/i.test(value)?value:null;
+const materialPattern=value=>['plain','polka','stripe'].includes(value)?value:null;
 const normalizeSpin=value=>((finite(value,0)%360)+360)%360;
 function clampPosition(x,z){const distance=Math.hypot(x,z);return distance>STEM_RADIUS?[x/distance*STEM_RADIUS,z/distance*STEM_RADIUS]:[x,z];}
 function sanitizeStem(stem,index,used){
@@ -33,10 +36,10 @@ function nextStemId(stems,seed){
   return `s${seed}-${largest+1}`;
 }
 function materialize(d){return arrange(d).map(stem=>({...stem}));}
-export const createDraft=()=>({version:1,step:0,wrap:'segment',size:20,spread:.92,autoSpread:true,paper:0,accent:0,backdrop:'auto',quantities:{},stems:[],selected:{},seed:42,shelfId:null,title:'',message:{text:'',song:'',voice:null,photos:[],backdrop:null,words:'',date:'',color:'#20201c',font:'Classic',textSize:100,card:null}});
+export const createDraft=()=>({version:1,step:0,wrap:'segment',size:20,spread:.92,autoSpread:true,paper:0,accent:0,ribbonColor:null,surfaceColor:null,surfacePattern:null,backdrop:'auto',quantities:{},stems:[],selected:{},seed:42,shelfId:null,title:'',message:{text:'',song:'',voice:null,photos:[],backdrop:null,words:'',date:'',color:'#20201c',font:'Classic',textSize:100,card:null}});
 export function hydrateDraft(saved){
   if(!saved||saved.version!==1)return createDraft();
-  return {...createDraft(),...saved,shelfId:typeof saved.shelfId==='string'?saved.shelfId:null,title:typeof saved.title==='string'?saved.title:'',message:{...createDraft().message,...saved.message}};
+  return {...createDraft(),...saved,ribbonColor:materialColor(saved.ribbonColor),surfaceColor:materialColor(saved.surfaceColor),surfacePattern:materialPattern(saved.surfacePattern),shelfId:typeof saved.shelfId==='string'?saved.shelfId:null,title:typeof saved.title==='string'?saved.title:'',message:{...createDraft().message,...saved.message}};
 }
 export const stemCount=d=>Object.values(d.quantities).reduce((a,b)=>a+b,0);
 export const bouquetColor=d=>d.backdrop==='auto'?(d.accent===1?'#E2EDF8':d.accent===3?'#F1F3EF':'#EBF2F7'):d.backdrop;
@@ -81,7 +84,7 @@ export function updateDraft(d,action){
       next={...d,stems};
     }
   }else if(action.type==='size'){
-    if(![10,16,20].includes(action.value))error='Choose a valid bouquet size.';
+    if(!validCapacity(action.value))error='Choose a valid bouquet size.';
     else if(count>action.value)error=`Remove ${count-action.value} stems before choosing this size. Your flowers are safe.`;
     else next={...d,size:action.value};
   }else if(action.type==='clear')next={...d,quantities:{},stems:[]};
@@ -96,7 +99,12 @@ export function updateDraft(d,action){
     const selected={...d.selected};for(const key of Object.keys(quantities))selected[byKey[key].group]=key;
     const seed=d.seed+1;
     next={...d,quantities,stems:generatedStems(quantities,seed),selected,seed};
-  }else if(action.type==='patch')next={...d,...action.value};
+  }else if(action.type==='patch'){
+    const value={...action.value};
+    for(const key of ['ribbonColor','surfaceColor'])if(Object.hasOwn(value,key))value[key]=materialColor(value[key]);
+    if(Object.hasOwn(value,'surfacePattern'))value.surfacePattern=materialPattern(value.surfacePattern);
+    next={...d,...value};
+  }
   else if(action.type==='message')next={...d,message:{...d.message,...action.value}};
   else if(action.type==='appendPhotos'){
     if(d.message.photos.length+action.photos.length>4)error='You can add up to four photos.';

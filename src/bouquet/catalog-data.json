@@ -370,6 +370,282 @@
       "color": 16249836,
       "modelPath": "/flowers/carnation/carnation_white.glb",
       "modelScale": 1.2
+    },
+    {
+      "key": "rose_peach",
+      "group": "Rose",
+      "name": "Peach",
+      "note": "layered petals",
+      "meaning": "Purity and new beginnings — often given at weddings and fresh starts.",
+      "color": 15644313,
+      "modelPath": "/flowers/rose/white_rose.glb",
+      "modelScale": 1.5,
+      "petalColor": "#eeb699"
+    },
+    {
+      "key": "tulip_lilac",
+      "group": "Tulip",
+      "name": "Lilac",
+      "note": "cupped bloom",
+      "meaning": "Forgiveness and worthiness — a sincere, honest gesture.",
+      "color": 13087192,
+      "modelPath": "/flowers/tulip/tulip_white.glb",
+      "modelScale": 1.5,
+      "petalColor": "#c7b1d8"
+    },
+    {
+      "key": "carnation_rose",
+      "group": "Carnation",
+      "name": "Rose",
+      "note": "ruffled bloom",
+      "meaning": "Pure love and good luck — an honest, simple kindness.",
+      "color": 13733032,
+      "modelPath": "/flowers/carnation/carnation_white.glb",
+      "modelScale": 1.2,
+      "petalColor": "#d18ca8"
+    },
+    {
+      "key": "delphinium_lilac",
+      "group": "Delphinium",
+      "name": "Lilac",
+      "note": "tall spike",
+      "meaning": "Dignity and reaching upward — encouragement to keep going.",
+      "color": 11772372,
+      "modelPath": "/flowers/del/del_bule.glb",
+      "modelScale": 1.5,
+      "petalColor": "#b3a1d4"
+    },
+    {
+      "key": "marguerite_yellow",
+      "group": "Marguerite",
+      "name": "Butter",
+      "note": "cream daisy",
+      "meaning": "Innocence and loyal love — simple, honest affection.",
+      "color": 15848846,
+      "modelPath": "/flowers/markaret/markaret.glb",
+      "modelScale": 1.5,
+      "modelRot": [
+        0,
+        180,
+        0
+      ],
+      "spinDeg": 180,
+      "petalColor": "#f1d58e"
+    },
+    {
+      "key": "gerbera_coral",
+      "group": "Gerbera",
+      "name": "Coral",
+      "note": "white gerbera",
+      "meaning": "Innocence and cheer — a bright, clean-hearted hello.",
+      "color": 15510164,
+      "modelPath": "/flowers/markaret/gerbera_white.glb",
+      "modelScale": 1.5,
+      "modelRot": [
+        0,
+        180,
+        0
+      ],
+      "spinDeg": 180,
+      "petalColor": "#ecaa94"
+    },
+    {
+      "key": "spray_rose_cream",
+      "group": "Spray Rose",
+      "name": "Cream",
+      "note": "cluster rose",
+      "meaning": "Gentle joy and gratitude — many small blooms, one sweet message.",
+      "color": 15785921,
+      "modelPath": "/flowers/rose/spray_rose/pink.glb",
+      "modelScale": 1.5,
+      "petalColor": "#f0dfc1"
+    },
+    {
+      "key": "orchid_blush",
+      "group": "Orchid",
+      "name": "Blush",
+      "note": "orchid spray",
+      "meaning": "Refined beauty and rare admiration — for someone extraordinary.",
+      "color": 15187916,
+      "modelPath": "/flowers/phala/white_phala.glb",
+      "modelScale": 1.5,
+      "spinDeg": 0,
+      "petalColor": "#e7bfcc"
+    },
+    {
+      "key": "anthurium_coral",
+      "group": "Anthurium",
+      "name": "Coral",
+      "note": "waxy heart",
+      "meaning": "Hospitality and happiness — a bold, open-hearted welcome.",
+      "color": 15244173,
+      "modelPath": "/flowers/anthurium/anthurium.glb",
+      "modelScale": 1.5,
+      "spinDeg": 0,
+      "petalColor": "#e89b8d"
+    },
+    {
+      "key": "hydrangea_lilac",
+      "group": "Hydrangea",
+      "name": "Lilac",
+      "note": "full cluster",
+      "meaning": "Heartfelt understanding — \"thank you for being you.\"",
+      "color": 12363732,
+      "modelPath": "/flowers/hydrangeas/hydrangeas.glb",
+      "modelScale": 1.5,
+      "petalColor": "#bca7d4"
+    },
+    {
+      "key": "stock_ivory",
+      "group": "Stock",
+      "name": "Ivory",
+      "note": "clustered spike",
+      "meaning": "Lasting beauty and bonds of affection — a happy, enduring life.",
+      "color": 15787989,
+      "modelPath": "/flowers/stock_in_bloom/stock_in_bloom.glb",
+      "modelScale": 1.5,
+      "petalColor": "#f0e7d5"
+    },
+    {
+      "key": "sunflower_rust",
+      "group": "Sunflower",
+      "name": "Rust",
+      "note": "wide face",
+      "meaning": "Adoration and loyalty — a face that follows the one it loves.",
+      "color": 13141842,
+      "modelPath": "/flowers/sunflower/sunflower.glb",
+      "modelScale": 1.5,
+      "spinDeg": 0,
+      "petalColor": "#c88752"
+    },
+    {
+      "key": "lily_apricot",
+      "group": "Lily",
+      "name": "Apricot",
+      "note": "trumpet bloom",
+      "meaning": "Purity and renewed spirit — the flower of fresh starts and remembrance.",
+      "color": 15581853,
+      "modelPath": "/flowers/lily/white.glb",
+      "modelScale": 1.85,
+      "spinDeg": 0,
+      "spinJitter": 35,
+      "petalColor": "#edc29d"
+    },
+    {
+      "key": "lisianthus_lilac",
+      "group": "Lisianthus",
+      "name": "Lilac",
+      "note": "ruffled cup",
+      "meaning": "Appreciation and a lasting bond — quiet thanks that keeps.",
+      "color": 12759253,
+      "modelPath": "/flowers/lisianthus/white.glb",
+      "modelScale": 1.5,
+      "spinDeg": 0,
+      "petalColor": "#c2b0d5"
+    },
+    {
+      "key": "dahlia_ivory",
+      "group": "Dahlia",
+      "name": "Ivory",
+      "note": "layered pompon",
+      "meaning": "Commitment and a bond that holds — elegance that keeps its promise.",
+      "color": 15786703,
+      "modelPath": "/flowers/dahlia/pink.glb",
+      "modelScale": 1.5,
+      "spinDeg": 0,
+      "spinJitter": 25,
+      "petalColor": "#f0e2cf"
+    },
+    {
+      "key": "ranunculus_lemon",
+      "group": "Ranunculus",
+      "name": "Lemon",
+      "note": "spiral petals",
+      "meaning": "Radiant charm — \"I am dazzled by you.\"",
+      "color": 15390102,
+      "modelPath": "/flowers/ranunculus/blush.glb",
+      "modelScale": 1.5,
+      "spinDeg": 0,
+      "spinJitter": 25,
+      "petalColor": "#ead596"
+    },
+    {
+      "key": "lily_yellow",
+      "group": "Lily",
+      "name": "Yellow",
+      "note": "trumpet bloom",
+      "meaning": "Yellow lilies bring warm affection and thoughtful wishes.",
+      "color": 15716183,
+      "modelPath": "/flowers/lily/white.glb",
+      "modelScale": 1.85,
+      "spinDeg": 0,
+      "spinJitter": 35,
+      "petalColor": "#efcf57"
+    },
+    {
+      "key": "lily_orange",
+      "group": "Lily",
+      "name": "Orange",
+      "note": "trumpet bloom",
+      "meaning": "Orange lilies bring warm affection and thoughtful wishes.",
+      "color": 15306821,
+      "modelPath": "/flowers/lily/white.glb",
+      "modelScale": 1.85,
+      "spinDeg": 0,
+      "spinJitter": 35,
+      "petalColor": "#e99045"
+    },
+    {
+      "key": "lily_peach",
+      "group": "Lily",
+      "name": "Peach",
+      "note": "trumpet bloom",
+      "meaning": "Peach lilies bring warm affection and thoughtful wishes.",
+      "color": 15777699,
+      "modelPath": "/flowers/lily/white.glb",
+      "modelScale": 1.85,
+      "spinDeg": 0,
+      "spinJitter": 35,
+      "petalColor": "#f0bfa3"
+    },
+    {
+      "key": "lily_coral",
+      "group": "Lily",
+      "name": "Coral",
+      "note": "trumpet bloom",
+      "meaning": "Coral lilies bring warm affection and thoughtful wishes.",
+      "color": 15303290,
+      "modelPath": "/flowers/lily/white.glb",
+      "modelScale": 1.85,
+      "spinDeg": 0,
+      "spinJitter": 35,
+      "petalColor": "#e9827a"
+    },
+    {
+      "key": "lily_lavender",
+      "group": "Lily",
+      "name": "Lavender",
+      "note": "trumpet bloom",
+      "meaning": "Lavender lilies bring warm affection and thoughtful wishes.",
+      "color": 11706574,
+      "modelPath": "/flowers/lily/white.glb",
+      "modelScale": 1.85,
+      "spinDeg": 0,
+      "spinJitter": 35,
+      "petalColor": "#b2a0ce"
+    },
+    {
+      "key": "lily_burgundy",
+      "group": "Lily",
+      "name": "Burgundy",
+      "note": "trumpet bloom",
+      "meaning": "Burgundy lilies bring warm affection and thoughtful wishes.",
+      "color": 9254996,
+      "modelPath": "/flowers/lily/white.glb",
+      "modelScale": 1.85,
+      "spinDeg": 0,
+      "spinJitter": 35,
+      "petalColor": "#8d3854"
     }
   ],
   "wraps": [
@@ -406,6 +682,38 @@
               "color": 16052201,
               "pattern": "polka",
               "dot": 2105372
+            },
+            {
+              "name": "Cream",
+              "color": 16051938
+            },
+            {
+              "name": "Blush",
+              "color": 15651288
+            },
+            {
+              "name": "Dusty rose",
+              "color": 13014432
+            },
+            {
+              "name": "Lavender",
+              "color": 12957658
+            },
+            {
+              "name": "Sage",
+              "color": 12438457
+            },
+            {
+              "name": "Powder blue",
+              "color": 12900582
+            },
+            {
+              "name": "Navy",
+              "color": 2506071
+            },
+            {
+              "name": "Charcoal",
+              "color": 4539979
             }
           ]
         },
@@ -479,6 +787,38 @@
               "color": 16052201,
               "pattern": "polka",
               "dot": 2105372
+            },
+            {
+              "name": "Cream",
+              "color": 16051938
+            },
+            {
+              "name": "Blush",
+              "color": 15651288
+            },
+            {
+              "name": "Dusty rose",
+              "color": 13014432
+            },
+            {
+              "name": "Lavender",
+              "color": 12957658
+            },
+            {
+              "name": "Sage",
+              "color": 12438457
+            },
+            {
+              "name": "Powder blue",
+              "color": 12900582
+            },
+            {
+              "name": "Navy",
+              "color": 2506071
+            },
+            {
+              "name": "Charcoal",
+              "color": 4539979
             }
           ]
         },
@@ -511,6 +851,85 @@
             {
               "name": "Cream",
               "color": 16773314
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "glass",
+      "name": "Clear glass",
+      "proceduralModel": "glass",
+      "topR": 0.88,
+      "bottomR": 0.88,
+      "modelScale": 1,
+      "camElev": 24,
+      "flowerHeight": 1,
+      "tag": {
+        "x": 0,
+        "y": -1.1,
+        "len": 0.28,
+        "scale": 1,
+        "gap": 0.34
+      },
+      "colorGroups": []
+    },
+    {
+      "key": "ceramic",
+      "name": "Ceramic vase",
+      "proceduralModel": "ceramic",
+      "topR": 0.8,
+      "bottomR": 0.84,
+      "modelScale": 1,
+      "camElev": 24,
+      "flowerHeight": 1,
+      "tag": {
+        "x": 0,
+        "y": -1.1,
+        "len": 0.28,
+        "scale": 1,
+        "gap": 0.34
+      },
+      "colorGroups": [
+        {
+          "label": "Body",
+          "parts": [
+            "wrap_surface"
+          ],
+          "roughness": 0.28,
+          "metalness": 0,
+          "options": [
+            {
+              "name": "Cream",
+              "color": 16051938
+            },
+            {
+              "name": "Blush",
+              "color": 15651288
+            },
+            {
+              "name": "Dusty rose",
+              "color": 13014432
+            },
+            {
+              "name": "Lavender",
+              "color": 12957658
+            },
+            {
+              "name": "Sage",
+              "color": 12438457
+            },
+            {
+              "name": "Powder blue",
+              "color": 12900582
+            },
+            {
+              "name": "Navy",
+              "color": 2506071
+            },
+            {
+              "name": "Charcoal",
+              "color": 4539979
             }
           ]
         }
