@@ -17,7 +17,7 @@ function vesselShell(key){
 export function createProceduralWrap(config){
  const root=new THREE.Group(),key=config.proceduralModel;
  if(!['glass','ceramic'].includes(key))throw new Error('Unknown procedural vessel.');
- const material=key==='glass'?new THREE.MeshPhysicalMaterial({color:0xe7f4fa,roughness:.08,transmission:.94,thickness:.12,ior:1.46,transparent:true,opacity:.38,depthWrite:false,side:THREE.DoubleSide}):surfaceMaterial(0xf4eee2);
+ const material=key==='glass'?new THREE.MeshPhysicalMaterial({color:0xf4fbff,roughness:.04,transmission:1,thickness:.08,ior:1.46,opacity:1,depthWrite:false,side:THREE.FrontSide}):surfaceMaterial(0xf4eee2);
  mesh(root,vesselShell(key),material,'surface','wrap_surface');return root;
 }
 
@@ -44,9 +44,58 @@ export async function buildFlower(type){
  if(type.modelRot)source.rotation.set(...type.modelRot.map(value=>value*Math.PI/180));
  applyPetalColor(source,type);return source;
 }
+const textureSamples=new WeakMap();
+let sampleCanvas;
+function stemColor(material,uv){
+ if(!material.map)return material.color?.clone()||new THREE.Color(0x334b23);
+ const texture=material.map,image=texture.image;if(!image||!uv)return null;
+ texture.updateMatrix();texture.transformUv(uv);
+ const x=Math.min(image.width-1,Math.max(0,Math.floor(uv.x*image.width))),y=Math.min(image.height-1,Math.max(0,Math.floor(uv.y*image.height)));
+ let samples=textureSamples.get(texture);if(!samples){samples=new Map();textureSamples.set(texture,samples);}
+ const key=x+':'+y;if(samples.has(key))return samples.get(key)?.clone()||null;
+ let color=null;
+ try{
+  let pixel;
+  if(image.data?.length===image.width*image.height*4)pixel=image.data.subarray((y*image.width+x)*4,(y*image.width+x)*4+4);
+  else if(typeof document!=='undefined'){
+   sampleCanvas??=document.createElement('canvas');sampleCanvas.width=sampleCanvas.height=1;
+   const context=sampleCanvas.getContext('2d',{willReadFrequently:true});
+   context.drawImage(image,x,y,1,1,0,0,1,1);pixel=context.getImageData(0,0,1,1).data;
+  }
+  if(pixel&&pixel[3]>127)color=new THREE.Color().setRGB(pixel[0]/255,pixel[1]/255,pixel[2]/255,texture.colorSpace===THREE.SRGBColorSpace?THREE.SRGBColorSpace:THREE.LinearSRGBColorSpace).multiply(material.color||new THREE.Color(0xffffff));
+ }catch{}
+ samples.set(key,color);return color?.clone()||null;
+}
+export function stemAttachment(flower){
+ if(flower.userData.stemAttachment)return flower.userData.stemAttachment;
+ flower.updateWorldMatrix(true,true);
+ const inverse=flower.matrixWorld.clone().invert(),point=new THREE.Vector3(),bounds=new THREE.Box3(),parts=[];
+ flower.traverse(object=>{
+  if(!object.isMesh)return;
+  const matrix=new THREE.Matrix4().multiplyMatrices(inverse,object.matrixWorld),positions=object.geometry.attributes.position;
+  parts.push({object,matrix,positions});
+  for(let i=0;i<positions.count;i++)bounds.expandByPoint(point.fromBufferAttribute(positions,i).applyMatrix4(matrix));
+ });
+ if(bounds.isEmpty())throw new Error('The flower has no stem geometry.');
+ const band=Math.min(.04,Math.max(.015,(bounds.max.y-bounds.min.y)*.015)),base=new THREE.Vector3(),tips=[],color=new THREE.Color(0,0,0);
+ let count=0,colors=0;
+ for(const {object,matrix,positions} of parts)for(let i=0;i<positions.count;i++){
+  point.fromBufferAttribute(positions,i).applyMatrix4(matrix);
+  if(point.y>bounds.min.y+band)continue;
+  base.add(point);tips.push(point.clone());count++;
+  const material=Array.isArray(object.material)?object.material[0]:object.material,uv=object.geometry.attributes.uv;
+  const sampled=stemColor(material,uv?new THREE.Vector2().fromBufferAttribute(uv,i):null);
+  if(sampled){color.add(sampled);colors++;}
+ }
+ base.multiplyScalar(1/count);
+ const radius=Math.min(.045,Math.max(.012,...tips.map(tip=>Math.hypot(tip.x-base.x,tip.z-base.z))));
+ const attachment={base,join:base.clone().add(new THREE.Vector3(0,.025,0)),radius,color:colors?color.multiplyScalar(1/colors):new THREE.Color(0x334b23)};
+ flower.userData.stemAttachment=attachment;return attachment;
+}
 export function extendedStem(stem,flower,clipY){
- const top=new THREE.Vector3(0,.45,0).applyQuaternion(flower.quaternion).add(flower.position),bottom=new THREE.Vector3(stem.x*.07,clipY+.1,stem.z*.07);
- const root=new THREE.Group();mesh(root,tubeBetween(bottom,top,.028),surfaceMaterial(0x527748),'foliage','vase_stem');return root;
+ const attachment=stemAttachment(flower);flower.updateMatrix();
+ const top=attachment.join.clone().applyMatrix4(flower.matrix),bottom=new THREE.Vector3(stem.x*.07,clipY+.1,stem.z*.07);
+ const root=new THREE.Group();mesh(root,tubeBetween(bottom,top,attachment.radius),surfaceMaterial(attachment.color),'foliage','vase_stem');return root;
 }
 
 export function placeStem(flower,stem,spread,config){

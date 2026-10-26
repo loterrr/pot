@@ -27,14 +27,14 @@ test('vases have finite open walls and a body anchor, without ribbon meshes or a
   for(let i=0;i<positions.count;i++)if(positions.getY(i)>.5&&Math.hypot(positions.getX(i),positions.getZ(i))<.6)highCenter=true;
   assert.equal(highCenter,false);
   const layout=vesselLayout(config,40);assert.ok(layout.clipY<-3);assert.ok(config.tag.y>box.min.y&&config.tag.y<box.max.y);
-  if(key==='glass'){assert.ok(vase.children[0].material.transmission>.8);assert.equal(vase.children[0].material.depthWrite,false);}
+  if(key==='glass'){assert.ok(vase.children[0].material.transmission>.8);assert.equal(vase.children[0].material.depthWrite,false);assert.equal(vase.children[0].material.opacity,1);assert.equal(vase.children[0].material.transparent,false);assert.equal(vase.children[0].material.side,THREE.FrontSide);}
   disposeModel(vase);
  }
 });
 
 test('forty cloned flowers retain shared geometry after disposal and extensions converge inside glass',async()=>{
  const {cloneModel,disposeModel,extendedStem}=await import('./bouquet-models.js');
- const template=new THREE.Group(),geometry=new THREE.CylinderGeometry(.02,.02,3),material=new THREE.MeshStandardMaterial();template.add(new THREE.Mesh(geometry,material));let disposed=0;geometry.addEventListener('dispose',()=>disposed++);
+ const template=new THREE.Group(),geometry=new THREE.CylinderGeometry(.02,.02,3),material=new THREE.MeshStandardMaterial();geometry.translate(0,1.5,0);template.add(new THREE.Mesh(geometry,material));let disposed=0;geometry.addEventListener('dispose',()=>disposed++);
  for(let i=0;i<40;i++){
   const clone=cloneModel(template);clone.position.set(.4*Math.cos(i),-.4,.4*Math.sin(i));clone.rotation.z=.25;
   const extension=extendedStem({x:.8*Math.cos(i),z:.8*Math.sin(i)},clone,-3.27),box=new THREE.Box3().setFromObject(extension);
@@ -90,4 +90,28 @@ test('fern and ruscus provide two shades and load through the scene and thumbnai
   silhouettes.push(firstCount);
  }
  assert.notEqual(silhouettes[0],silhouettes[1]);
+});
+
+
+test('vase extensions join offset model stem ends after rotation, with matching stem color',async()=>{
+ const {stemAttachment,extendedStem,disposeModel}=await import('./bouquet-models.js');
+ const geometry=new THREE.CylinderGeometry(.025,.025,3,12);geometry.translate(.23,1.5,-.18);
+ const material=new THREE.MeshStandardMaterial({color:'#29431b'}),flower=new THREE.Group(),source=new THREE.Group();source.add(new THREE.Mesh(geometry,material));source.scale.setScalar(1.3);flower.add(source);flower.position.set(.3,-.2,.1);flower.rotation.set(.2,.7,-.3);
+ const attachment=stemAttachment(flower);
+ assert.ok(attachment.base.distanceTo(new THREE.Vector3(.23*1.3,0,-.18*1.3))<.01);
+ const join=attachment.join.clone().applyQuaternion(flower.quaternion).add(flower.position);
+ const extension=extendedStem({x:.3,z:.2},flower,-3.27),mesh=extension.children[0],positions=mesh.geometry.attributes.position;
+ let distance=Infinity;for(let i=0;i<positions.count;i++)distance=Math.min(distance,new THREE.Vector3().fromBufferAttribute(positions,i).distanceTo(join));
+ assert.ok(distance<.00001,'the extension cap must touch the actual model stem');
+ assert.equal(mesh.material.color.getHexString(),'29431b');
+ flower.rotation.y+=1;const moved=extendedStem({x:.3,z:.2},flower,-3.27);assert.notDeepEqual(new THREE.Box3().setFromObject(moved).max,new THREE.Box3().setFromObject(extension).max);
+ disposeModel(moved);disposeModel(extension);disposeModel(flower);
+});
+test('textured stem attachments sample the authored stem color instead of generic green',async()=>{
+ const {stemAttachment,disposeModel}=await import('./bouquet-models.js');
+ const geometry=new THREE.CylinderGeometry(.02,.02,2,8);geometry.translate(0,1,0);
+ const texture=new THREE.DataTexture(new Uint8Array([24,48,12,255]),1,1);texture.colorSpace=THREE.SRGBColorSpace;
+ const flower=new THREE.Group();flower.add(new THREE.Mesh(geometry,new THREE.MeshStandardMaterial({map:texture})));
+ assert.equal(stemAttachment(flower).color.getHexString(),'18300c');
+ disposeModel(flower);texture.dispose();
 });
