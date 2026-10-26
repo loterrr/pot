@@ -191,7 +191,7 @@ test('every curated color and ribbon-free vase survives a recipient link',async(
 
 
 test('retired lily colors remain readable in existing bouquet links',async()=>{
- const old=updateDraft(createDraft(),{type:'add',key:'lily_yellow'}).draft;
+ const old=updateDraft(createDraft(),{type:'add',key:'lily_peach'}).draft;
  const opened=await decodeShareLink(await encodeShareLink(old,'https://example.test/'));
- assert.equal(opened.stems[0].key,'lily_yellow');assert.equal(opened.quantities.lily_yellow,1);
+ assert.equal(opened.stems[0].key,'lily_peach');assert.equal(opened.quantities.lily_peach,1);
 });

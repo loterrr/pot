@@ -7,7 +7,7 @@ test('curated colors retain existing species and GLBs, including six additional 
  for(const shade of ['yellow','orange','peach','coral','lavender','burgundy']){
   const lily=byKey['lily_'+shade];assert.ok(lily,shade);assert.match(lily.petalColor,/^#[\da-f]{6}$/i);assert.equal(lily.modelPath,'/flowers/lily/white.glb');
  }
- for(const flower of flowers)assert.ok(flower.modelPath);
+ for(const flower of flowers)assert.ok(flower.modelPath||flower.proceduralFoliage);
  assert.deepEqual(wraps.map(w=>w.key),['segment','bow','glass','ceramic']);
  for(const wrap of wraps.slice(0,2)){
   assert.deepEqual(wrap.colorGroups[0].options.slice(0,2).map(o=>o.name),['White','Polka']);
@@ -66,10 +66,28 @@ test('wrap thumbnails resolve vase cache keys to ribbon-free catalog models',asy
 });
 
 
-test('lily picker has five colors including blue while retired colors still resolve',()=>{
+test('lily picker includes yellow and orange while retired colors still resolve',()=>{
  const lilies=groups.find(group=>group.name==='Lily').variants;
- assert.deepEqual(lilies.map(lily=>lily.name),['White','Pink','Blue','Lavender','Burgundy']);
+ assert.deepEqual(lilies.map(lily=>lily.name),['White','Pink','Blue','Yellow','Orange','Lavender','Burgundy']);
  assert.equal(byKey.lily_blue.petalColor,'#6d91d8');assert.equal(byKey.lily_blue.modelPath,'/flowers/lily/white.glb');
- assert.ok(byKey.lily_yellow);assert.ok(!flowers.some(flower=>flower.key==='lily_yellow'));
+ assert.ok(byKey.lily_peach);assert.ok(!flowers.some(flower=>flower.key==='lily_peach'));
  assert.equal(byKey.dahlia_black.name,'Black');assert.equal(byKey.dahlia_black.petalColor,'#241a22');
+});
+
+
+test('fern and ruscus provide two shades and load through the scene and thumbnail model path',async()=>{
+ const {buildFlower,disposeModel}=await import('./bouquet-models.js');
+ const silhouettes=[];
+ for(const group of ['Fern','Ruscus']){
+  const variants=groups.find(item=>item.name===group)?.variants;assert.equal(variants?.length,2);
+  let firstCount;
+  for(const type of variants){
+   assert.equal(type.kind,'leaf');const model=await buildFlower(type),box=new THREE.Box3().setFromObject(model);
+   assert.ok(box.max.y>2.5&&box.min.y<=0);assert.ok(box.max.x-box.min.x>.5);
+   let count=0;model.traverse(mesh=>{if(mesh.isMesh){assert.equal(mesh.userData.role,'foliage');assert.ok([...mesh.geometry.attributes.position.array].every(Number.isFinite));count+=mesh.geometry.attributes.position.count;}});
+   assert.ok(count<20000);firstCount??=count;disposeModel(model);
+  }
+  silhouettes.push(firstCount);
+ }
+ assert.notEqual(silhouettes[0],silhouettes[1]);
 });

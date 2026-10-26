@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
 import {applyPetalColor} from './model-materials.js';
+import {createFoliage} from './foliage-models.js';
 
 const loader=new GLTFLoader().setMeshoptDecoder(MeshoptDecoder),templates=new Map();
 const surfaceMaterial=color=>new THREE.MeshStandardMaterial({color,roughness:.76,side:THREE.DoubleSide});
@@ -34,8 +35,8 @@ export function disposeModel(root){
  for(const geometry of geometries)geometry.dispose();for(const material of materials)material.dispose();root.clear();
 }
 export function loadModel(type){
- const key=type.modelPath||type.path||(type.proceduralModel+':'+type.key);
- if(!templates.has(key))templates.set(key,(type.proceduralModel?Promise.resolve(createProceduralWrap(type)):loader.loadAsync(key).then(gltf=>gltf.scene)).catch(error=>{templates.delete(key);throw error;}));
+ const key=type.modelPath||type.path||((type.proceduralModel||type.proceduralFoliage)+':'+type.key);
+ if(!templates.has(key))templates.set(key,(type.proceduralFoliage?Promise.resolve(createFoliage(type)):type.proceduralModel?Promise.resolve(createProceduralWrap(type)):loader.loadAsync(key).then(gltf=>gltf.scene)).catch(error=>{templates.delete(key);throw error;}));
  return templates.get(key);
 }
 export async function buildFlower(type){

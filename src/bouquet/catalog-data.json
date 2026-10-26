@@ -607,8 +607,7 @@
       "modelScale": 1.85,
       "spinDeg": 0,
       "spinJitter": 35,
-      "petalColor": "#efcf57",
-      "hidden": true
+      "petalColor": "#efcf57"
     },
     {
       "key": "lily_orange",
@@ -621,8 +620,7 @@
       "modelScale": 1.85,
       "spinDeg": 0,
       "spinJitter": 35,
-      "petalColor": "#e99045",
-      "hidden": true
+      "petalColor": "#e99045"
     },
     {
       "key": "lily_peach",
@@ -677,6 +675,50 @@
       "spinDeg": 0,
       "spinJitter": 35,
       "petalColor": "#8d3854"
+    },
+    {
+      "key": "fern_green",
+      "group": "Fern",
+      "name": "Green",
+      "note": "fine feathery frond",
+      "kind": "leaf",
+      "meaning": "Green foliage adds texture and space between the blooms.",
+      "color": 7640666,
+      "proceduralFoliage": "fern",
+      "modelScale": 1.5
+    },
+    {
+      "key": "fern_forest",
+      "group": "Fern",
+      "name": "Forest",
+      "note": "fine feathery frond",
+      "kind": "leaf",
+      "meaning": "Forest foliage adds texture and space between the blooms.",
+      "color": 4154955,
+      "proceduralFoliage": "fern",
+      "modelScale": 1.5
+    },
+    {
+      "key": "ruscus_green",
+      "group": "Ruscus",
+      "name": "Green",
+      "note": "oval pointed leaves",
+      "kind": "leaf",
+      "meaning": "Green foliage adds texture and space between the blooms.",
+      "color": 4878411,
+      "proceduralFoliage": "ruscus",
+      "modelScale": 1.5
+    },
+    {
+      "key": "ruscus_sage",
+      "group": "Ruscus",
+      "name": "Sage",
+      "note": "oval pointed leaves",
+      "kind": "leaf",
+      "meaning": "Sage foliage adds texture and space between the blooms.",
+      "color": 9084284,
+      "proceduralFoliage": "ruscus",
+      "modelScale": 1.5
     }
   ],
   "wraps": [
